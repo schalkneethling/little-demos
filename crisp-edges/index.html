@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pixel art scaling demo: compare crisp-edges rendering</title>
+    <meta
+      name="description"
+      content="Interactive demo for scaling pixel art. Compare default browser smoothing with CSS image-rendering: crisp-edges using a scale slider and on/off toggle."
+    />
+    <link rel="stylesheet" href="css/main.css" media="screen" />
+  </head>
+  <body class="typo-default">
+    <header class="demo__header">
+      <h1 class="typo-display">crisp pixel art</h1>
+      <p class="typo-default">
+        Scale a pixel-art sprite and compare default smoothing with crisp edge rendering.
+      </p>
+    </header>
+
+    <main class="demo">
+      <form class="demo__controls" aria-label="Rendering controls">
+        <div class="control">
+          <input type="checkbox" id="crisp-edges" name="crisp-edges" class="control__checkbox" />
+          <label for="crisp-edges" class="control__label typo-default">
+            Enable <code>image-rendering: crisp-edges</code>
+          </label>
+        </div>
+
+        <div class="control">
+          <label for="scale" class="control__label typo-default">Scale</label>
+          <input
+            type="range"
+            id="scale"
+            name="scale"
+            class="control__range"
+            min="1"
+            max="4"
+            step="0.25"
+            value="1"
+          />
+          <output for="scale" id="scale-value" class="control__output typo-sm-md">1×</output>
+        </div>
+      </form>
+
+      <figure class="demo__preview">
+        <div class="demo__stage">
+          <img
+            id="character"
+            class="demo__character"
+            src="310a.png"
+            width="240"
+            height="240"
+            alt="Pixel-art character sprite"
+          />
+        </div>
+        <figcaption class="demo__size typo-small" id="size-label" aria-live="polite">
+          240 × 240 px (1×)
+        </figcaption>
+      </figure>
+    </main>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>

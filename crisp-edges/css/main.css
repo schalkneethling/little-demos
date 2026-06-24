@@ -1,0 +1,259 @@
+@import url("https://fonts.googleapis.com/css2?family=Arimo&family=Saira+Semi+Condensed:wght@700&display=swap");
+
+@property --character-size {
+  inherits: false;
+  initial-value: 240px;
+  syntax: "<length>";
+}
+
+:root {
+  --color-blue: #5aa9e6;
+  --color-sky: #7fc8f8;
+  --color-surface: #f9f9f9;
+  --color-yellow: #ffe45e;
+  --color-pink: #ff6392;
+  --color-text: #1a2a3a;
+  --color-text-muted: #3a5366;
+  --color-blue-strong: #1e6fa8;
+  --color-pink-strong: #a83862;
+  --radius: 0.75rem;
+  --shadow: 0 0.5rem 1.5rem rgb(26 42 58 / 12%);
+  --typescale-ratio: 1.2;
+  --typo-body-family: "Arimo", system-ui, sans-serif;
+  --typo-heading-family: "Saira Semi Condensed", system-ui, sans-serif;
+  --typo-body-weight-default: 400;
+  --typo-heading-weight-default: 700;
+  --typo-line-height: 1.5;
+  --typo-letter-spacing: 0;
+  --typo-size-xs: clamp(0.607rem, 0.549rem + 0.29vw, 0.781rem);
+  --typo-size-small: clamp(0.729rem, 0.659rem + 0.35vw, 0.937rem);
+  --typo-size-default: clamp(0.875rem, 0.792rem + 0.42vw, 1.125rem);
+  --typo-size-sm-md: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  --typo-size-md: clamp(1.26rem, 1.14rem + 0.6vw, 1.62rem);
+  --typo-size-lg: clamp(1.512rem, 1.368rem + 0.72vw, 1.944rem);
+  --typo-size-xl: clamp(1.815rem, 1.642rem + 0.86vw, 2.333rem);
+  --typo-size-xxl: clamp(2.177rem, 1.97rem + 1.04vw, 2.799rem);
+  --typo-size-display: clamp(2.613rem, 2.364rem + 1.24vw, 3.359rem);
+  --character-base-size: 240px;
+  --character-max-size: 960px;
+}
+
+.typo-xs {
+  font-family: var(--typo-body-family);
+  font-size: var(--typo-size-xs);
+  font-weight: var(--typo-body-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-small {
+  font-family: var(--typo-body-family);
+  font-size: var(--typo-size-small);
+  font-weight: var(--typo-body-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-default {
+  font-family: var(--typo-body-family);
+  font-size: var(--typo-size-default);
+  font-weight: var(--typo-body-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-sm-md {
+  font-family: var(--typo-heading-family);
+  font-size: var(--typo-size-sm-md);
+  font-weight: var(--typo-heading-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-md {
+  font-family: var(--typo-heading-family);
+  font-size: var(--typo-size-md);
+  font-weight: var(--typo-heading-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-lg {
+  font-family: var(--typo-heading-family);
+  font-size: var(--typo-size-lg);
+  font-weight: var(--typo-heading-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-xl {
+  font-family: var(--typo-heading-family);
+  font-size: var(--typo-size-xl);
+  font-weight: var(--typo-heading-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-xxl {
+  font-family: var(--typo-heading-family);
+  font-size: var(--typo-size-xxl);
+  font-weight: var(--typo-heading-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+.typo-display {
+  font-family: var(--typo-heading-family);
+  font-size: var(--typo-size-display);
+  font-weight: var(--typo-heading-weight-default);
+  letter-spacing: var(--typo-letter-spacing);
+  line-height: var(--typo-line-height);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-sky);
+  color: var(--color-text);
+  margin: 0;
+  min-block-size: 100dvb;
+}
+
+code {
+  color: var(--color-pink-strong);
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.demo {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  inline-size: min(100%, calc(var(--character-max-size) + 6rem));
+  margin-inline: auto;
+  padding-block: 2rem 3rem;
+  padding-inline: 1.5rem;
+}
+
+.demo__header {
+  inline-size: min(100%, calc(var(--character-max-size) + 6rem));
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3rem) 0;
+  padding-inline: 1.5rem;
+  text-align: center;
+
+  & h1 {
+    color: var(--color-text);
+    margin-block: 0 0.5rem;
+    margin-inline: 0;
+  }
+
+  & p {
+    color: var(--color-text);
+    margin: 0;
+    margin-inline: auto;
+    max-inline-size: 32ch;
+  }
+}
+
+.demo__preview {
+  align-items: center;
+  background: var(--color-surface);
+  border: 3px solid var(--color-blue);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  inline-size: 100%;
+  margin: 0;
+  overflow-x: auto;
+  padding-block: 2rem;
+  padding-inline: 1.5rem;
+
+  & .demo__size {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.demo__stage {
+  --character-size: var(--character-base-size);
+
+  block-size: var(--character-size);
+  display: grid;
+  flex-shrink: 0;
+  inline-size: var(--character-size);
+  margin-inline: auto;
+  place-items: center;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: --character-size 200ms ease-out;
+  }
+}
+
+.demo__character {
+  block-size: 100%;
+  display: block;
+  image-rendering: auto;
+  inline-size: 100%;
+
+  &.is-crisp {
+    image-rendering: crisp-edges;
+  }
+}
+
+.demo__controls {
+  background: var(--color-surface);
+  border: 3px solid var(--color-yellow);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  inline-size: 100%;
+  padding-block: 1.5rem;
+  padding-inline: 1.5rem;
+}
+
+.control {
+  align-items: center;
+  display: grid;
+  gap: 0.75rem 1rem;
+  grid-template-columns: auto 1fr auto;
+
+  &:first-child {
+    grid-template-columns: auto 1fr;
+  }
+
+  &__label {
+    cursor: pointer;
+  }
+
+  &__checkbox {
+    accent-color: var(--color-pink);
+    block-size: 1.25rem;
+    cursor: pointer;
+    inline-size: 1.25rem;
+    margin: 0;
+  }
+
+  &__range {
+    accent-color: var(--color-blue);
+    cursor: pointer;
+    inline-size: 100%;
+    margin: 0;
+  }
+
+  &__output {
+    color: var(--color-blue-strong);
+    font-variant-numeric: tabular-nums;
+    min-inline-size: 2.5rem;
+    text-align: end;
+  }
+}

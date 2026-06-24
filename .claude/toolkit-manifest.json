@@ -1,0 +1,31 @@
+{
+  "hooks": {},
+  "skills": {
+    "semantic-html": {
+      "hash": "6fd38c8",
+      "installedAt": "2026-06-24",
+      "linkedTo": [".claude/skills", ".cursor/skills"]
+    },
+    "css-coder": {
+      "hash": "214787f",
+      "installedAt": "2026-06-24",
+      "linkedTo": [".claude/skills", ".cursor/skills"]
+    },
+    "css-tokens": {
+      "hash": "7d4781a",
+      "installedAt": "2026-06-24",
+      "linkedTo": [".claude/skills", ".cursor/skills"]
+    },
+    "frontend-testing": {
+      "hash": "e4486bd",
+      "installedAt": "2026-06-24",
+      "linkedTo": [".claude/skills", ".cursor/skills"]
+    },
+    "frontend-security": {
+      "hash": "3f71a82",
+      "installedAt": "2026-06-24",
+      "linkedTo": [".claude/skills", ".cursor/skills"]
+    }
+  },
+  "agents": {}
+}
