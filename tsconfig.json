@@ -1,20 +1,19 @@
 {
   "compilerOptions": {
-    "target": "esnext",
-    "lib": ["es2023"],
-    "moduleDetection": "force",
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
-    "resolveJsonModule": true,
-    "types": ["node"],
-    "strict": true,
-    "noUnusedLocals": true,
-    "declaration": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
+    "allowJs": true,
     "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true
-  }
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext",
+    "verbatimModuleSyntax": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
 }

@@ -27,14 +27,26 @@
     "build": "vp pack",
     "dev": "vp pack --watch",
     "test": "vp test",
-    "check": "vp check",
+    "check": "bun run lint && bun run format:check && bun run typecheck",
     "prepublishOnly": "vp run build",
-    "prepare": "vp config"
+    "prepare": "vp config",
+    "lint": "node .calavera/run-if-files.mjs \"JavaScript/TypeScript\" \"js,jsx,ts,tsx,mjs,cjs\" -- oxlint . && node .calavera/run-if-files.mjs \"CSS\" \"css,scss\" -- stylelint \"**/*.{css,scss}\"",
+    "lint:fix": "node .calavera/run-if-files.mjs \"JavaScript/TypeScript\" \"js,jsx,ts,tsx,mjs,cjs\" -- oxlint --fix . && node .calavera/run-if-files.mjs \"CSS\" \"css,scss\" -- stylelint \"**/*.{css,scss}\" --fix",
+    "format": "node .calavera/run-if-files.mjs \"JavaScript/TypeScript\" \"js,jsx,ts,tsx,mjs,cjs\" -- oxfmt --write .",
+    "format:check": "node .calavera/run-if-files.mjs \"JavaScript/TypeScript\" \"js,jsx,ts,tsx,mjs,cjs\" -- oxfmt --check .",
+    "typecheck": "node .calavera/run-if-files.mjs \"TypeScript\" \"ts,tsx\" -- tsc --noEmit"
   },
   "devDependencies": {
+    "@schalkneethling/stylelint-plugin-css-property-type-validator": "0.1.0-beta.1",
     "@types/node": "^25.6.2",
     "@typescript/native-preview": "7.0.0-dev.20260509.2",
     "bumpp": "^11.1.0",
+    "oxfmt": "^0.56.0",
+    "oxlint": "^1.71.0",
+    "stylelint": "^17.13.0",
+    "stylelint-config-standard": "^40.0.0",
+    "stylelint-order": "^8.1.1",
+    "stylelint-plugin-use-baseline": "^1.4.3",
     "typescript": "^6.0.3",
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
     "vite-plus": "latest"

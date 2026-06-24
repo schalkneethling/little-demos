@@ -1,0 +1,20 @@
+{
+  "extends": ["stylelint-config-standard"],
+  "ignoreFiles": ["coverage/**", "dist/**", "dist-web/**", "node_modules/**"],
+  "plugins": [
+    "stylelint-order",
+    "stylelint-plugin-use-baseline",
+    "@schalkneethling/stylelint-plugin-css-property-type-validator"
+  ],
+  "rules": {
+    "order/properties-alphabetical-order": true,
+    "plugin/use-baseline": true,
+    "css-property-type-validator/valid-property-types": true,
+    "selector-class-pattern": [
+      "^([a-z][a-z0-9]*(-[a-z0-9]+)*|[a-z][a-z0-9]*(__[a-z][a-z0-9-]+)?(-[a-z0-9]+)*)$",
+      {
+        "message": "Expected class selector to be kebab-case or BEM"
+      }
+    ]
+  }
+}
