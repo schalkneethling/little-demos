@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registered custom property transitions demo</title>
+    <meta
+      name="description"
+      content="Toggle a disabled stylesheet that registers CSS custom properties, then compare how the same light cue snaps or transitions smoothly."
+    />
+    <link rel="stylesheet" href="css/main.css" media="screen" />
+    <link
+      id="property-registry"
+      rel="stylesheet"
+      href="css/properties.css"
+      media="screen"
+      disabled
+    />
+  </head>
+  <body>
+    <main class="property-demo" data-cue="matinee" data-registered="false">
+      <header class="demo-header">
+        <p class="demo-eyebrow">CSS custom properties</p>
+        <h1>Registered light cues</h1>
+        <p>
+          The stage uses custom properties for the scan angle, glow position, spread, and colour.
+          Without <code>@property</code>, the cue snaps. Once the registry stylesheet is enabled,
+          those same values can interpolate.
+        </p>
+      </header>
+
+      <div class="demo-layout">
+        <section class="stage-panel" aria-labelledby="stage-title">
+          <h2 id="stage-title">The result</h2>
+
+          <figure class="spotlight-figure" aria-labelledby="scene-caption">
+            <div class="spotlight-scene" aria-hidden="true">
+              <div class="spotlight-beam"></div>
+            </div>
+            <figcaption id="scene-caption">
+              <strong>Watch the spotlight.</strong>
+              Flip the cue before and after registering the property definitions.
+            </figcaption>
+          </figure>
+        </section>
+
+        <section class="controls-panel" aria-labelledby="controls-title">
+          <h2 id="controls-title">The controls</h2>
+
+          <button type="button" class="registry-button" id="registry-button" aria-pressed="false">
+            Register <code>@property</code> rules
+          </button>
+
+          <label class="cue-switch" for="cue-switch">
+            <input type="checkbox" id="cue-switch" />
+            <span>Run the midnight cue</span>
+          </label>
+
+          <dl class="readout">
+            <div>
+              <dt>Registry</dt>
+              <dd id="registry-status">inactive</dd>
+            </div>
+            <div>
+              <dt>Cue</dt>
+              <dd id="cue-status">matinee</dd>
+            </div>
+          </dl>
+
+          <pre class="code-sample"><code>&lt;link rel="stylesheet"
+      href="css/properties.css"
+      disabled&gt;</code></pre>
+        </section>
+      </div>
+    </main>
+
+    <p class="visually-hidden" role="status" aria-live="polite" id="status"></p>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>

@@ -4,10 +4,11 @@ Small, self-contained web demos for exploring CSS, HTML, and browser behaviour. 
 
 ## Demos
 
-| Demo                            | Description                                                                                |
-| ------------------------------- | ------------------------------------------------------------------------------------------ |
-| [accent-color](./accent-color/) | Theme native form controls and a button with a shared `accent-color` custom property.      |
-| [crisp-edges](./crisp-edges/)   | Scale pixel art and compare default browser smoothing with `image-rendering: crisp-edges`. |
+| Demo                                          | Description                                                                                |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [accent-color](./accent-color/)               | Theme native form controls and a button with a shared `accent-color` custom property.      |
+| [crisp-edges](./crisp-edges/)                 | Scale pixel art and compare default browser smoothing with `image-rendering: crisp-edges`. |
+| [property-transition](./property-transition/) | Register custom properties with `@property` so CSS transitions can interpolate them.       |
 
 ## Getting started
 
@@ -23,7 +24,7 @@ Run the development server and open a demo in the browser:
 vp dev
 ```
 
-Then visit [http://localhost:5173/crisp-edges/](http://localhost:5173/crisp-edges/) or [http://localhost:5173/accent-color/](http://localhost:5173/accent-color/).
+Then visit [http://localhost:5173/crisp-edges/](http://localhost:5173/crisp-edges/), [http://localhost:5173/accent-color/](http://localhost:5173/accent-color/), or [http://localhost:5173/property-transition/](http://localhost:5173/property-transition/).
 
 ## Development
 
@@ -57,6 +58,11 @@ little-demos/
 ├── crisp-edges/          # Pixel art scaling demo
 │   ├── index.html
 │   ├── css/main.css
+│   └── js/main.js
+├── property-transition/  # Registered custom property transition demo
+│   ├── index.html
+│   ├── css/main.css
+│   ├── css/properties.css
 │   └── js/main.js
 ├── .claude-toolkit/      # Canonical agent skill definitions
 ├── .claude/skills/       # Symlinks for Claude Code

@@ -1,0 +1,392 @@
+:root {
+  --canvas: #efe9df;
+  --ink: #201715;
+  --muted: #6f625b;
+  --panel: #fffaf2;
+  --panel-line: #d9cabe;
+  --button: #19535f;
+  --button-ink: #fff;
+  --button-disabled: #d9d1c7;
+  --accent: #d45d4f;
+  --focus: #005fcc;
+  --radius: 0.5rem;
+  --maxw: 67rem;
+
+  color-scheme: light;
+  font-family:
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  line-height: 1.5;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background:
+    linear-gradient(90deg, rgb(32 23 21 / 4%) 1px, transparent 1px),
+    linear-gradient(0deg, rgb(32 23 21 / 4%) 1px, transparent 1px), var(--canvas);
+  background-size: 2rem 2rem;
+  color: var(--ink);
+  margin: 0;
+  min-block-size: 100dvb;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+label {
+  cursor: pointer;
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 0.1875rem solid var(--focus);
+  outline-offset: 0.1875rem;
+}
+
+code {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.property-demo {
+  inline-size: min(100%, var(--maxw));
+  margin-inline: auto;
+  padding-block: clamp(1.5rem, 4vw, 3.5rem);
+  padding-inline: 1.25rem;
+}
+
+.demo-header {
+  margin-block-end: clamp(1.5rem, 4vw, 2.5rem);
+  max-inline-size: 48rem;
+}
+
+.demo-eyebrow {
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  margin-block: 0 0.45rem;
+  margin-inline: 0;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-inline: 0;
+}
+
+h1,
+h2 {
+  line-height: 1.05;
+}
+
+h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.35rem, 7vw, 4.75rem);
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-block: 0 0.75rem;
+}
+
+h2 {
+  font-size: 1rem;
+  margin-block: 0 1rem;
+}
+
+p {
+  margin-block: 0;
+}
+
+.demo-header p {
+  color: var(--muted);
+  max-inline-size: 42rem;
+}
+
+.demo-layout {
+  align-items: start;
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.stage-panel,
+.controls-panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--radius);
+  padding: clamp(1rem, 3vw, 1.5rem);
+}
+
+.spotlight-figure {
+  margin: 0;
+}
+
+.spotlight-scene {
+  --spotlight-angle: -34deg;
+  --spotlight-x: 40%;
+  --spotlight-y: 24%;
+  --spotlight-spread: 32%;
+  --spotlight-color: #58f07a;
+  --field-color: #0a3d24;
+
+  aspect-ratio: 2.85 / 1;
+  background:
+    linear-gradient(90deg, #020609 0, transparent 10%, transparent 90%, #020609 100%),
+    linear-gradient(to bottom, rgb(2 6 9 / 14%) 0 20%, rgb(1 6 8 / 90%) 91%),
+    radial-gradient(
+      ellipse at var(--spotlight-x) var(--spotlight-y),
+      color-mix(in srgb, var(--spotlight-color) 22%, transparent),
+      transparent var(--spotlight-spread)
+    ),
+    linear-gradient(to bottom, rgb(88 240 122 / 14%) 0 1px, transparent 1px 100%),
+    repeating-linear-gradient(90deg, rgb(88 240 122 / 24%) 0 1px, transparent 1px 1.6rem),
+    repeating-linear-gradient(0deg, rgb(88 240 122 / 15%) 0 1px, transparent 1px 1.6rem),
+    linear-gradient(180deg, color-mix(in srgb, var(--field-color) 84%, #020609), #020609 76%);
+  background-size: auto, auto, auto, auto, auto, auto, auto;
+  border: 0.5rem solid #090c0d;
+  border-radius: 0.35rem;
+  box-shadow:
+    inset 0 0 0 1px rgb(88 240 122 / 10%),
+    inset 0 0 4rem rgb(0 0 0 / 78%),
+    0 1.5rem 2.5rem -2rem rgb(32 23 21 / 70%);
+  inline-size: 100%;
+  isolation: isolate;
+  max-inline-size: 100%;
+  min-block-size: 14rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.property-demo[data-cue="midnight"] .spotlight-scene {
+  --spotlight-angle: 32deg;
+  --spotlight-x: 65%;
+  --spotlight-y: 19%;
+  --spotlight-spread: 40%;
+  --spotlight-color: #7af6ff;
+  --field-color: #082f42;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spotlight-scene {
+    transition:
+      --spotlight-angle 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+      --spotlight-x 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+      --spotlight-y 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+      --spotlight-spread 1000ms cubic-bezier(0.4, 0, 0.2, 1),
+      --spotlight-color 1000ms linear,
+      --field-color 1000ms linear;
+  }
+}
+
+.spotlight-scene::before {
+  background: radial-gradient(
+    circle at 50% 56%,
+    color-mix(in srgb, var(--spotlight-color) 22%, transparent),
+    transparent 66%
+  );
+  block-size: 22rem;
+  border: 1px solid color-mix(in srgb, var(--spotlight-color) 78%, transparent);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 1.3rem 4rem color-mix(in srgb, var(--spotlight-color) 14%, transparent),
+    0 0 1.25rem color-mix(in srgb, var(--spotlight-color) 28%, transparent);
+  content: "";
+  inline-size: min(68%, 27rem);
+  inset-block-end: -13.8rem;
+  inset-inline-start: 50%;
+  mix-blend-mode: screen;
+  opacity: 0.86;
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.spotlight-scene::after {
+  background: var(--spotlight-color);
+  block-size: 0.38rem;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 0.13rem color-mix(in srgb, var(--spotlight-color) 32%, transparent),
+    0 0 0.8rem var(--spotlight-color),
+    0 0 1.6rem color-mix(in srgb, var(--spotlight-color) 74%, transparent);
+  content: "";
+  inline-size: 0.38rem;
+  inset-block-end: 45%;
+  inset-inline-start: 50%;
+  position: absolute;
+  transform: rotate(var(--spotlight-angle));
+  transform-origin: 0 9.6rem;
+  z-index: 3;
+}
+
+.spotlight-beam {
+  background:
+    radial-gradient(
+      ellipse at var(--spotlight-x) calc(var(--spotlight-y) + 18%),
+      color-mix(in srgb, var(--spotlight-color) 30%, transparent),
+      transparent 31%
+    ),
+    radial-gradient(
+      ellipse at 50% 92%,
+      color-mix(in srgb, var(--spotlight-color) 10%, transparent),
+      transparent 45%
+    );
+  inset: 0;
+  mix-blend-mode: screen;
+  opacity: 0.86;
+  position: absolute;
+  z-index: 2;
+}
+
+.spotlight-beam::before {
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--spotlight-color) 82%, transparent),
+    color-mix(in srgb, var(--spotlight-color) 16%, transparent) 68%,
+    transparent
+  );
+  block-size: 12rem;
+  content: "";
+  filter: drop-shadow(0 0 0.45rem var(--spotlight-color));
+  inline-size: 1px;
+  inset-block-end: -0.2rem;
+  inset-inline-start: 50%;
+  mix-blend-mode: screen;
+  opacity: 0.8;
+  position: absolute;
+  transform: rotate(var(--spotlight-angle));
+  transform-origin: 50% 100%;
+}
+
+.spotlight-figure figcaption {
+  color: var(--muted);
+  font-size: 0.88rem;
+  margin-block-start: 0.75rem;
+  max-inline-size: 34rem;
+}
+
+.spotlight-figure figcaption strong {
+  color: var(--ink);
+  display: block;
+}
+
+.controls-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.registry-button {
+  background: var(--button);
+  border: 0;
+  border-radius: 0.35rem;
+  color: var(--button-ink);
+  font-weight: 800;
+  min-block-size: 3rem;
+  padding-block: 0.7rem;
+  padding-inline: 1rem;
+  text-align: start;
+}
+
+.registry-button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--button-ink);
+}
+
+.cue-switch {
+  align-items: center;
+  background: #fff;
+  border: 1px solid var(--panel-line);
+  border-radius: 0.35rem;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.9rem;
+}
+
+.cue-switch input {
+  block-size: 1.25rem;
+  inline-size: 1.25rem;
+  margin: 0;
+}
+
+.readout {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.readout div {
+  background: #fff;
+  border: 1px solid var(--panel-line);
+  border-radius: 0.35rem;
+  padding: 0.8rem;
+}
+
+.readout dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.readout dd {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0.15rem 0 0;
+}
+
+.code-sample {
+  background: #231a17;
+  border-radius: 0.35rem;
+  color: #fff7d4;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  margin: 0;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
+.visually-hidden {
+  block-size: 1px;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+@media (width >= 50rem) {
+  .demo-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+  }
+
+  .controls-panel {
+    inset-block-start: 1.25rem;
+    position: sticky;
+  }
+}
+
+@media (width <= 34rem) {
+  .spotlight-scene {
+    aspect-ratio: auto;
+    block-size: 17rem;
+    min-block-size: 0;
+  }
+
+  .readout {
+    grid-template-columns: 1fr;
+  }
+}
