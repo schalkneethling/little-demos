@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pizza theme picker: CSS accent-color demo</title>
+    <meta
+      name="description"
+      content="Choose a pizza theme color and see CSS accent-color update checkboxes, radio buttons, and range controls."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/main.css" media="screen" />
+  </head>
+  <body>
+    <main class="pizza-demo">
+      <form class="pizza-form" aria-labelledby="pizza-heading">
+        <header class="pizza-form-header">
+          <h1 id="pizza-heading">The Pizza</h1>
+
+          <label class="theme-picker" for="theme-color">
+            <input type="color" id="theme-color" name="theme-color" value="#efefef" />
+            <span>Your theme</span>
+          </label>
+        </header>
+
+        <fieldset class="pizza-options pizza-toppings">
+          <legend>Toppings</legend>
+
+          <figure class="pizza-card">
+            <img
+              src="media/chocoholic.png"
+              width="590"
+              height="420"
+              alt="Chocolate dessert pizza slice"
+            />
+            <figcaption class="pizza-card-choice">
+              <input type="checkbox" id="chocoholic" name="toppings" value="chocoholic" />
+              <label for="chocoholic">Chocoholic</label>
+            </figcaption>
+          </figure>
+
+          <figure class="pizza-card">
+            <img src="media/peppahog.png" width="590" height="420" alt="Pepperoni pizza slice" />
+            <figcaption class="pizza-card-choice">
+              <input type="checkbox" id="peppa-hog" name="toppings" value="peppa-hog" />
+              <label for="peppa-hog">Peppa Hog</label>
+            </figcaption>
+          </figure>
+
+          <figure class="pizza-card">
+            <img
+              src="media/basil-exposition.png"
+              width="590"
+              height="420"
+              alt="Margherita pizza slice with basil"
+            />
+            <figcaption class="pizza-card-choice">
+              <input
+                type="checkbox"
+                id="basil-exposition"
+                name="toppings"
+                value="basil-exposition"
+              />
+              <label for="basil-exposition">Basil Exposition</label>
+            </figcaption>
+          </figure>
+
+          <figure class="pizza-card">
+            <img
+              src="media/dracula-nightmare.png"
+              width="590"
+              height="420"
+              alt="White garlic pizza slice with basil"
+            />
+            <figcaption class="pizza-card-choice">
+              <input
+                type="checkbox"
+                id="draculas-nightmare"
+                name="toppings"
+                value="draculas-nightmare"
+              />
+              <label for="draculas-nightmare">Dracula&rsquo;s Nightmare</label>
+            </figcaption>
+          </figure>
+        </fieldset>
+
+        <fieldset class="pizza-options pizza-base">
+          <legend>The Base</legend>
+
+          <div class="base-options">
+            <label for="traditional-base">
+              <input type="radio" id="traditional-base" name="base" value="traditional" checked />
+              <span>Traditional base</span>
+            </label>
+
+            <label for="deep-pan-base">
+              <input type="radio" id="deep-pan-base" name="base" value="deep-pan" />
+              <span>Deep pan base</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="pan-depth">
+          <label for="pan-depth">How deep is your pan?</label>
+          <input type="range" id="pan-depth" name="pan-depth" min="0" max="10" value="1" />
+          <div class="pan-depth-labels" aria-hidden="true">
+            <span>deep</span>
+            <span>the abyss</span>
+          </div>
+        </div>
+
+        <button type="submit">Get baked</button>
+      </form>
+    </main>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>
