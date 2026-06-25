@@ -4,9 +4,10 @@ Small, self-contained web demos for exploring CSS, HTML, and browser behaviour. 
 
 ## Demos
 
-| Demo                          | Description                                                                                |
-| ----------------------------- | ------------------------------------------------------------------------------------------ |
-| [crisp-edges](./crisp-edges/) | Scale pixel art and compare default browser smoothing with `image-rendering: crisp-edges`. |
+| Demo                            | Description                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------ |
+| [accent-color](./accent-color/) | Theme native form controls and a button with a shared `accent-color` custom property.      |
+| [crisp-edges](./crisp-edges/)   | Scale pixel art and compare default browser smoothing with `image-rendering: crisp-edges`. |
 
 ## Getting started
 
@@ -22,7 +23,7 @@ Run the development server and open a demo in the browser:
 vp dev
 ```
 
-Then visit [http://localhost:5173/crisp-edges/](http://localhost:5173/crisp-edges/).
+Then visit [http://localhost:5173/crisp-edges/](http://localhost:5173/crisp-edges/) or [http://localhost:5173/accent-color/](http://localhost:5173/accent-color/).
 
 ## Development
 
@@ -48,6 +49,11 @@ bun run lint:fix
 
 ```
 little-demos/
+├── accent-color/         # Native form control theming demo
+│   ├── index.html
+│   ├── css/main.css
+│   ├── js/main.js
+│   └── media/
 ├── crisp-edges/          # Pixel art scaling demo
 │   ├── index.html
 │   ├── css/main.css
