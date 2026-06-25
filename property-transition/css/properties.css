@@ -1,0 +1,37 @@
+/* stylelint-disable plugin/use-baseline -- This demo intentionally demonstrates @property registration. */
+
+@property --spotlight-angle {
+  inherits: true;
+  initial-value: -18deg;
+  syntax: "<angle>";
+}
+
+@property --spotlight-x {
+  inherits: true;
+  initial-value: 26%;
+  syntax: "<percentage>";
+}
+
+@property --spotlight-y {
+  inherits: true;
+  initial-value: 35%;
+  syntax: "<percentage>";
+}
+
+@property --spotlight-spread {
+  inherits: true;
+  initial-value: 19%;
+  syntax: "<percentage>";
+}
+
+@property --spotlight-color {
+  inherits: true;
+  initial-value: #ffd166;
+  syntax: "<color>";
+}
+
+@property --field-color {
+  inherits: true;
+  initial-value: #0a3d24;
+  syntax: "<color>";
+}
