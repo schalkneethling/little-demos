@@ -1,0 +1,439 @@
+:root {
+  --ground: #e2e7db;
+  --surface: #fbf8f2;
+  --ink: #34251e;
+  --muted: #7c6c60;
+  --line: #d8ccbc;
+  --cream: #f3e6cf;
+  --cherry: #c0334b;
+  --radius: 0.9rem;
+  --focus: #1f4a6b;
+  --maxw: 64rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--ground);
+  color: var(--ink);
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  line-height: 1.55;
+  margin: 0;
+  padding-block: 2rem 3.5rem;
+  padding-inline: 1.25rem;
+}
+
+.layer-cake {
+  margin-inline: auto;
+  max-inline-size: var(--maxw);
+}
+
+.layer-cake-header {
+  margin-block-end: 2rem;
+}
+
+.layer-cake-eyebrow {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  margin-block: 0 0.4rem;
+  margin-inline: 0;
+  text-transform: uppercase;
+}
+
+.layer-cake-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  margin-block: 0 0.6rem;
+  margin-inline: 0;
+}
+
+.layer-cake-title code {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.78em;
+  padding-block: 0.05em;
+  padding-inline: 0.3em;
+}
+
+.layer-cake-lede {
+  color: var(--ink);
+  margin: 0;
+  max-inline-size: 46rem;
+}
+
+/* Shared: it is a grid at every size. Only the columns differ, so the
+   column track lives inside bounded media queries (Shared First). */
+.layer-cake-main {
+  align-items: start;
+  display: grid;
+  gap: 1.75rem;
+}
+
+@media (width < 60em) {
+  .layer-cake-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (width >= 60em) {
+  .layer-cake-main {
+    grid-template-columns: minmax(17rem, 22rem) 1fr;
+  }
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding-block: 1.5rem;
+  padding-inline: 1.5rem;
+}
+
+.panel-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-block: 0 0.25rem;
+  margin-inline: 0;
+}
+
+.panel-hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-block: 0 1.25rem;
+  margin-inline: 0;
+}
+
+/* ---- The cake (the result) ------------------------------------- */
+
+.cake {
+  margin: 0;
+  text-align: center;
+}
+
+.cake-scene {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-block-end: 0.75rem;
+  position: relative;
+}
+
+.cake-cherry {
+  background: var(--cherry); /* set here only — never contested */
+  block-size: 1.1rem;
+  border-radius: 50%;
+  inline-size: 1.1rem;
+  margin-block-end: -0.35rem;
+  position: relative;
+  z-index: 3;
+}
+
+.cake-cherry::before {
+  background: #5d7d3a;
+  block-size: 0.85rem;
+  border-radius: 0.1rem;
+  content: "";
+  inline-size: 0.16rem;
+  inset-block-end: 80%;
+  inset-inline-start: 50%;
+  position: absolute;
+  transform: translateX(-50%) rotate(8deg);
+}
+
+.cake-icing {
+  block-size: 2.4rem;
+  border-end-end-radius: 0.5rem;
+  border-end-start-radius: 0.5rem;
+  border-start-end-radius: 1.4rem;
+  border-start-start-radius: 1.4rem;
+  inline-size: 11.8rem;
+  position: relative;
+  z-index: 2;
+
+  /* background is the CONTESTED property — supplied only by @layer blocks */
+}
+
+/* Drips inherit whichever icing colour currently wins. */
+.cake-icing::before,
+.cake-icing::after {
+  background: inherit;
+  block-size: 1.5rem;
+  border-end-end-radius: 1rem;
+  border-end-start-radius: 1rem;
+  content: "";
+  inline-size: 1.7rem;
+  inset-block-start: 1.7rem;
+  position: absolute;
+}
+
+.cake-icing::before {
+  inset-inline-start: 1.6rem;
+}
+
+.cake-icing::after {
+  block-size: 2rem;
+  inset-inline-end: 1.6rem;
+}
+
+.cake-body {
+  inline-size: 11rem;
+  overflow: hidden;
+  z-index: 1;
+
+  /* border-radius is base's unique contribution */
+}
+
+.cake-sponge {
+  block-size: 2.3rem;
+} /* background is base's contribution */
+.cake-cream {
+  background: var(--cream);
+  block-size: 0.55rem;
+}
+
+.cake-flavour {
+  color: var(--muted);
+  font-size: 0.78rem;
+
+  /* text-transform and letter-spacing are utils' unique contribution */
+}
+
+.cake-legend {
+  border-block-start: 1px solid var(--line);
+  font-size: 0.85rem;
+  margin-block: 1.75rem 0;
+  margin-inline: 0;
+  padding-block-start: 1.25rem;
+}
+
+.cake-legend dt {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-weight: 600;
+}
+
+.cake-legend dd {
+  color: var(--muted);
+  margin-block: 0 0.6rem;
+  margin-inline: 0;
+}
+
+.cake-legend dd:last-child {
+  margin-block-end: 0;
+}
+
+.cake-note {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+  margin-block: 1.1rem 0;
+  margin-inline: 0;
+}
+
+.cake-note code {
+  color: var(--ink);
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+/* ---- The reorderable stack (the cause) ------------------------- */
+
+.layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  list-style: none;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: 0;
+}
+
+.layer {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 0.7rem;
+  cursor: grab;
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: auto 1fr auto;
+  padding-block: 0.85rem;
+  padding-inline: 0.9rem;
+}
+
+.layer-dragging {
+  cursor: grabbing;
+  opacity: 0.4;
+}
+
+.layer-drop-before {
+  box-shadow: inset 0 3px 0 var(--focus);
+}
+
+.layer-drop-after {
+  box-shadow: inset 0 -3px 0 var(--focus);
+}
+
+.layer-handle {
+  color: var(--muted);
+  font-size: 1.1rem;
+  inline-size: 1.4rem;
+  line-height: 1;
+  text-align: center;
+  user-select: none;
+}
+
+.layer-name {
+  align-items: center;
+  display: flex;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-weight: 600;
+  gap: 0.55rem;
+}
+
+.layer-chip {
+  block-size: 0.85rem;
+  border: 1px solid rgb(0 0 0 / 12%);
+  border-radius: 50%;
+  flex: none;
+  inline-size: 0.85rem;
+}
+
+.layer-badge {
+  border: 1px solid #b9cfa0;
+  border-radius: 1rem;
+  color: #5d7d3a;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  padding-block: 0.1rem;
+  padding-inline: 0.5rem;
+  text-transform: uppercase;
+}
+
+.layer-desc {
+  color: var(--muted);
+  font-size: 0.8rem;
+  grid-column: 2;
+  margin-block: 0.25rem 0;
+  margin-inline: 0;
+}
+
+.layer-controls {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.layer-move {
+  background: var(--ground);
+  block-size: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 0.45rem;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 1rem;
+  inline-size: 2rem;
+  line-height: 1;
+}
+
+.layer-move:hover:not([disabled]) {
+  background: #d6ddcd;
+}
+
+.layer-move[disabled] {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+/* ---- Generated code panel -------------------------------------- */
+
+.code {
+  margin-block-start: 1.75rem;
+}
+
+.code-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-block: 0 0.25rem;
+  margin-inline: 0;
+}
+
+.code-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-block: 0 0.9rem;
+  margin-inline: 0;
+}
+
+.code-block {
+  background: #2c2018;
+  border-radius: 0.6rem;
+  color: #f0e7da;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  margin: 0;
+  overflow-inline: auto;
+  padding-block: 1rem;
+  padding-inline: 1.1rem;
+  white-space: pre;
+}
+
+.code-statement {
+  color: #ffd9a8;
+}
+
+.code-winner {
+  color: #9fe09f;
+  font-weight: 700;
+}
+
+.code-blocks {
+  color: #8d8276;
+}
+
+.code-caption {
+  color: #c9bfb2;
+}
+
+/* ---- Accessibility helpers ------------------------------------- */
+
+:is(button, [draggable]):focus-visible,
+.layer:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  block-size: 1px;
+  border: 0;
+  clip-path: inset(50%);
+  inline-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

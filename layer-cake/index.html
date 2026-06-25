@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The @layer cake — a CSS cascade layers demo</title>
+
+    <link rel="stylesheet" href="css/main.css" media="screen" />
+
+    <!--
+    The lesson lives here, and ONLY here. The first line is the order-
+    establishing @layer statement; it is the single thing JavaScript
+    rewrites. The blocks below never move. Initial markup is rendered by
+    the script so the page and the stylesheet always agree.
+  -->
+    <style id="layerStyles"></style>
+  </head>
+
+  <body>
+    <main class="layer-cake">
+      <header class="layer-cake-header">
+        <p class="layer-cake-eyebrow">CSS cascade layers</p>
+        <h1 class="layer-cake-title">The <code>@layer</code> cake</h1>
+        <p class="layer-cake-lede">
+          Drag to restack the layers. The layer on top wins the cascade, so it gets to ice the cake.
+          Every layer still contributes the parts no other layer touches, so reordering changes only
+          the one property they all compete for: the icing colour.
+        </p>
+      </header>
+
+      <div class="layer-cake-main">
+        <section class="panel" aria-labelledby="result-title">
+          <h2 class="panel-title" id="result-title">The result</h2>
+          <p class="panel-hint">The icing colour and the flavour word both follow the winner.</p>
+
+          <figure class="cake">
+            <div class="cake-scene">
+              <span class="cake-cherry" aria-hidden="true"></span>
+              <div class="cake-icing"></div>
+              <div class="cake-body">
+                <div class="cake-sponge"></div>
+                <div class="cake-cream"></div>
+                <div class="cake-sponge"></div>
+                <div class="cake-cream"></div>
+                <div class="cake-sponge"></div>
+              </div>
+            </div>
+            <figcaption class="cake-flavour"></figcaption>
+          </figure>
+
+          <dl class="cake-legend">
+            <dt>base</dt>
+            <dd>The rounded silhouette and the golden sponge.</dd>
+            <dt>components</dt>
+            <dd>The cherry on top and the soft shadow beneath.</dd>
+            <dt>utils</dt>
+            <dd>The flavour label, set in tracked capitals.</dd>
+          </dl>
+
+          <p class="cake-note">
+            Both contested values come straight from the cascade: the icing colour, and the flavour
+            word, which each layer supplies through the
+            <code>content</code> property on a pseudo-element. This is for demonstration only.
+            Meaningful text set through <code>content</code>
+            cannot be selected, is not found by in-page search, is invisible to translation tools,
+            and reaches screen readers inconsistently across browser and reader pairings. In real
+            work the word would live in the markup; here the announcement is carried by a live
+            region instead.
+          </p>
+        </section>
+
+        <div>
+          <section class="panel" aria-labelledby="stack-title">
+            <h2 class="panel-title" id="stack-title">The stack</h2>
+            <p class="panel-hint">Top wins. Drag to reorder, or use the move buttons.</p>
+            <ol class="layers" id="layers"></ol>
+          </section>
+
+          <section class="panel code" aria-labelledby="code-title">
+            <h2 class="code-title" id="code-title">Generated CSS</h2>
+            <p class="code-note">
+              JavaScript rewrites the <code>@layer</code> statement and nothing else. The blocks
+              never move; the cascade resolves the conflict. The last-declared layer wins.
+            </p>
+            <pre class="code-block"><code id="code"></code></pre>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <p class="visually-hidden" role="status" aria-live="polite" id="status"></p>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>
