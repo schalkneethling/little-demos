@@ -153,6 +153,26 @@ workflow against these same tests.
 
 For an intentional visual change, add `--update-snapshots` on each supported
 platform and inspect all five resulting images before committing. Do not refresh
-baselines merely to silence a failure. Only the changing diagnostics panel is
-hidden during capture; the player, arcade, labels, and interaction state must stay
-visible to the visual regression check.
+baselines merely to silence a failure. Capture renders only the world canvas;
+the HTML shell is visually hidden without changing layout. The player, arcade,
+canvas labels, and interaction markers remain visible to the visual regression
+check. Separate browser tests cover HTML controls, focus, accessibility and layout.
+
+## Hosted CI rendering correction
+
+The first integration CI run passed all 44 functional browser cases but failed
+the five stored visual comparisons. All retries produced the same differences.
+Artifact review traced those differences to platform-specific HTML system fonts:
+header sizing, button wrapping and the DOM attraction prompt. A direct comparison
+of the arcade region (450 × 470 pixels, including player and canvas labels) found
+zero differing pixels between the local Linux baseline and hosted CI.
+
+Canvas locator screenshots include overlapping HTML siblings. The fixtures now
+hide the HTML shell with test-only visibility rules and explicitly retain canvas
+visibility. This isolates art regression from platform-font UI variation, without
+masking artwork or weakening the exact pixel thresholds or fresh-load equality.
+Both platform baseline sets are regenerated and reviewed for this corrected scope.
+Runtime code and CI security/environment settings are unchanged by this correction.
+All five corrected comparisons passed without updates on Linux (19.0 seconds) and
+macOS (17.4 seconds), and all ten images passed independent visual review. Formatting,
+lint and type checks also passed after the test-only change.

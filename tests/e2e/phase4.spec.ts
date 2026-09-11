@@ -14,7 +14,11 @@ const grassImage = /\/grass-a(?:-[\w-]+)?\.png(?:\?.*)?$/;
 const runtimeImage = /\/(?:base|walk|planter|grass-a|clay)(?:-[\w-]+)?\.png(?:\?.*)?$/;
 // A canvas locator screenshot still includes overlapping DOM siblings. Hide only
 // the live debug counters, never the player, doorway, labels, or interaction state.
-const visualScreenshotStyle = "[data-world-debug] { visibility: hidden !important; }";
+// Locator screenshots include overlapping siblings. Compare world art, not the
+// platform's system-font HTML shell (covered by the separate UI/a11y tests).
+// Visibility preserves layout; every canvas pixel, including labels, stays visible.
+const visualScreenshotStyle =
+  "body { visibility: hidden !important; } [data-world-canvas] canvas { visibility: visible !important; }";
 
 async function expectArtSettled(page: Page, failedKeys: readonly string[] = []) {
   const canvasParent = page.locator("[data-world-canvas]");
