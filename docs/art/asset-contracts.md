@@ -69,17 +69,31 @@ type AssetKey = `${"attraction" | "prop" | "player" | "surface" | "ui"}/${string
 interface CommonSourceAsset {
   key: AssetKey;
   runtimePath: string;
+  output: { width: number; height: number };
   loadGroup: "initial-world" | "deferred-world";
   dependsOn: readonly AssetKey[];
-  fallback: { width: number; height: number; color: number };
+  fallback: { width: number; height: number; color: `#${string}` };
 }
 
 interface TransparentRasterSource extends CommonSourceAsset {
   kind: "transparent-raster";
   sourcePath: string;
-  sourceScale: 1 | 2;
-  runtime: { width: number; height: number; anchor: { x: number; y: number } };
-  frames?: { columns: number; rows: number; frameWidth: number; frameHeight: number };
+  sourceRect?: { x: number; y: number; width: number; height: number };
+  contentBox: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    gravity: "center" | "south";
+  };
+  anchor: { x: number; y: number };
+  frames?: {
+    columns: number;
+    rows: number;
+    frameWidth: number;
+    frameHeight: number;
+    sourceRects: readonly { x: number; y: number; width: number; height: number }[];
+  };
 }
 
 interface DeterministicSurfaceSource extends CommonSourceAsset {
@@ -87,7 +101,6 @@ interface DeterministicSurfaceSource extends CommonSourceAsset {
   recipePath: string;
   seed: number;
   alphaMode: "opaque-fill" | "transition-mask";
-  runtime: { width: number; height: number };
 }
 
 type AssetSourceDefinition = TransparentRasterSource | DeterministicSurfaceSource;
@@ -105,10 +118,12 @@ Keys use lower-case slash-separated namespaces with kebab-case segments, for exa
 semantic identity, not a content hash or revision. Changing artwork in place therefore
 does not require interaction-data edits.
 
-Production raster sources are authored at the art direction's proposed 2x scale and
-declare `sourceScale: 2`; their runtime dimensions and anchor are 1x logical values.
-The exporter performs the pinned downsample. A 1x exception must be explicit rather
-than inferred from a file. The 2.3 MB
+Production raster sources are authored at the art direction's proposed 2x scale.
+`sourceRect` is an explicit measured crop in native source pixels. The exporter
+contain-fits that crop into the declared 1x logical `contentBox`, with transparent
+letterboxing and no stretching or implicit alpha trim. A sheet instead supplies one
+row-major `sourceRect` per frame and normalizes each frame independently into the same
+per-frame content box. The 2.3 MB
 `docs/art/concepts/arcade-direction-v1.png` is concept/reference material, not an
 inventory source or runtime input. It is excluded from every runtime transfer, decode,
 and request total and is not evaluated against the pipeline's source/runtime file
@@ -147,6 +162,11 @@ hashes so encoder metadata changes can be distinguished from visual changes. Con
 art and generative images may guide a recipe, but are not accepted directly as runtime
 ground tiles: repeatability and seam checks must be deterministic.
 
+PR2 implements only the approved `speckle-v1` opaque-fill recipe used by grass and
+clay. It rejects `transition-mask` rather than guessing a transition algorithm. The
+contract reserves that alpha mode for a later versioned recipe and tests before path
+edges/corners enter production.
+
 The exporter generates, but never evaluates at runtime, an entry equivalent to:
 
 ```ts
@@ -168,6 +188,10 @@ interface RuntimeAssetDefinition {
   fallback: { width: number; height: number; color: number };
 }
 ```
+
+Generated URLs are static `new URL("./path.png?no-inline", import.meta.url).href`
+expressions. `?no-inline` keeps even small textures as measurable runtime requests
+instead of silently converting them to JavaScript data URLs.
 
 `decodedBytes` is the comparable budget proxy `width * height * 4` for an RGBA decode;
 sheet frames do not multiply it. This is not a claim about exact browser or GPU memory,
@@ -206,8 +230,15 @@ inventory, source, recipe, and runtime file it must:
 
 The proposed pre-read caps are 256 KiB per inventory/recipe text file, 64 MiB per
 source-art file, and 2 MiB per optimized runtime image. A runtime image is also capped
-at `2048 x 2048` and 16 MiB decoded. These are validation ceilings as well as budget
-inputs; an oversized file fails export instead of being read and warned about later.
+at `2048 x 2048` and 16 MiB decoded; a source decode is capped at 16,777,216 pixels
+(64 MiB RGBA). Aggregate decoded/file-count budgets are checked from inventory
+dimensions before any image generation. Source crops must contain alpha with both
+fully transparent and visible pixels. Every runtime frame's outer border must have
+alpha no greater than `8 / 255`, the documented antialiasing tolerance. Input and
+output ancestor paths are checked for symbolic links, and runtime paths are restricted
+to query-free/hash-free kebab-case `.png` paths below `src/assets/runtime/` before any
+write or check-mode read. These are validation ceilings as well as budget inputs; an
+oversized file fails export instead of being read and warned about later.
 
 ## Provisional budgets
 
