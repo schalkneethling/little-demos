@@ -8,6 +8,7 @@ Status: first stack layer; visual direction approved by the user on 2026-09-11. 
 2. [Art direction and inventory](./phase-4-art-direction.md).
 3. [Asset contracts and provisional budgets](./asset-contracts.md).
 4. [Generated arcade concept and limitations](./concepts/arcade-direction-v1.md).
+5. [Three-quarter production correction](./three-quarter-revision.md).
 
 The concept approves a visual language, not exact image geometry. The functional map remains authoritative. Preserve the full-viewport world, semantic directory, panel controls, native demo dialogs, and accessible keyboard interactions.
 

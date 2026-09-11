@@ -43,14 +43,14 @@ into the registry-driven platform.
 
 This project uses Vite+ (`vp`) for tooling. See [AGENTS.md](./AGENTS.md) for the full review checklist.
 
-| Task                         | Command           | Notes                                     |
-| ---------------------------- | ----------------- | ----------------------------------------- |
-| Install dependencies         | `vp install`      | Run after pulling changes                 |
-| Dev server                   | `vp dev`          | Serves the app and standalone demos       |
-| Format, lint, and type-check | `vp check`        | Oxfmt, Oxlint, Stylelint, and TypeScript  |
-| Unit tests                   | `vp test --run`   | Vitest                                    |
-| Browser tests                | `vp run test:e2e` | Build first; Playwright Chromium plus axe |
-| Production build             | `vp build`        | Builds the Vite application               |
+| Task                         | Command           | Notes                                    |
+| ---------------------------- | ----------------- | ---------------------------------------- |
+| Install dependencies         | `vp install`      | Run after pulling changes                |
+| Dev server                   | `vp dev`          | Serves the app and standalone demos      |
+| Format, lint, and type-check | `vp check`        | Oxfmt, Oxlint, Stylelint, and TypeScript |
+| Unit tests                   | `vp test --run`   | Vitest                                   |
+| Browser tests                | `vp run test:e2e` | Pinned Linux Docker; Chromium plus axe   |
+| Production build             | `vp build`        | Builds the Vite application              |
 
 Fix formatting and auto-fixable lint issues:
 
@@ -58,6 +58,10 @@ Fix formatting and auto-fixable lint issues:
 vp check --fix
 bun run lint:fix
 ```
+
+Browser tests build and run in the pinned container; the host does not need a
+Playwright browser installation. See [the Playwright testing guide](./docs/testing/playwright.md)
+for focused runs and reviewed snapshot updates.
 
 ## Project structure
 

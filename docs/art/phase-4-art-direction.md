@@ -2,6 +2,11 @@
 
 Status: visual language approved by the user on 2026-09-11; production implementation remains subject to review and measured budgets.
 
+The [three-quarter revision](./three-quarter-revision.md) records subsequent user
+feedback and supersedes the initial small-planter and bracket/badge proposals
+below. The production artwork must retain the reference's visible right wall and
+roof depth; front-facing simplification is not an acceptable substitute.
+
 This is the first Phase 4 approval package, not a finished production area. The
 approved starting approach is a handcrafted miniature fairground, readable
 near-isometric silhouettes, the existing warm UI palette, the current functional
