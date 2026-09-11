@@ -3,14 +3,15 @@ import { defineConfig, devices } from "@playwright/test";
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
-  // Keep concurrent WebGL worlds from saturating shared CI graphics resources.
-  workers: 2,
+  // Hosted runners share software-rendering resources; avoid competing WebGL worlds.
+  workers: process.env.CI ? 1 : 2,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: "http://127.0.0.1:4173",
     trace: "on-first-retry",
+    screenshot: "only-on-failure",
   },
   projects: [
     {

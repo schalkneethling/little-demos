@@ -28,3 +28,10 @@ jobs:
       - run: vp test --run
       - run: vp build
       - run: bun run test:e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-failures
+          path: test-results/
+          retention-days: 7

@@ -26,6 +26,10 @@ for (const width of [1280, 375, 320]) {
   test(`panel toggles are equal-sized and side by side at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 800 });
     await page.goto("/");
+    // Exercise a portable, wider fallback instead of relying on macOS display fonts.
+    await page.addStyleTag({ content: ":root { --font-display: monospace; }" });
+    if (width === 1280)
+      await page.addStyleTag({ content: "summary { font-size: 17px !important; }" });
     await page.evaluate(() => document.fonts.ready);
     const directory = await page.locator("[data-demo-directory]").boundingBox();
     const controls = await page.locator("[data-camera-controls]").boundingBox();

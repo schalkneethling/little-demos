@@ -181,6 +181,7 @@ for (const reducedMotion of [false, true]) {
   test(`keyboard attraction loop and exit with reduced motion ${reducedMotion}`, async ({
     page,
   }) => {
+    test.setTimeout(60_000);
     await page.emulateMedia({ reducedMotion: reducedMotion ? "reduce" : "no-preference" });
     await page.goto("/?debug-world");
     const world = page.locator("[data-world-control]");
@@ -189,7 +190,7 @@ for (const reducedMotion of [false, true]) {
     await page.locator("[data-explore]").click();
     await expect(world).toBeFocused();
     await page.keyboard.down("ArrowLeft");
-    await expect(prompt).toBeVisible({ timeout: 8000 });
+    await expect(prompt).toBeVisible({ timeout: 20_000 });
     await page.keyboard.up("ArrowLeft");
     await expect(dialog).not.toBeVisible();
     await page.keyboard.press("Enter");

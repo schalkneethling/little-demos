@@ -82,6 +82,8 @@ test("mouse drag, wheel pan, zoom, and accessible return work without moving the
 });
 
 test("camera zoom stays bounded when zooming and resizing", async ({ page }) => {
+  // 24 real clicks plus a large WebGL resize can be slow on software-rendered CI.
+  test.setTimeout(90_000);
   await page.goto("/");
   const panel = page.locator("[data-camera-controls]");
   await expect(page.locator("[data-explore]")).toBeEnabled();
