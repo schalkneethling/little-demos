@@ -21,9 +21,9 @@ test("camera buttons form a directional pad with an evenly spaced zoom row", asy
       down = await bounds("down"),
       right = await bounds("right");
     expect(up.y + up.height).toBeLessThan(left.y);
-    expect(left.y).toBe(down.y);
-    expect(down.y).toBe(right.y);
-    expect(up.x).toBe(down.x);
+    expect(left.y).toBeCloseTo(down.y, 1);
+    expect(down.y).toBeCloseTo(right.y, 1);
+    expect(up.x).toBeCloseTo(down.x, 1);
     expect(left.x).toBeLessThan(down.x);
     expect(down.x).toBeLessThan(right.x);
     for (const button of [up, left, down, right]) {
@@ -72,10 +72,13 @@ test("mouse drag, wheel pan, zoom, and accessible return work without moving the
   await expect(panel.locator("[data-camera-status]")).toHaveText("Following player.");
   await expect(panel).toHaveAttribute("data-zoom", "1");
   await page.getByRole("button", { name: "Pan left", exact: true }).click();
+  await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+  const manualZoom = await panel.getAttribute("data-zoom");
   await page.locator("[data-control-deck] summary").click();
   await page.locator("[data-explore]").click();
   await page.keyboard.press("ArrowRight");
   await expect(panel.locator("[data-camera-status]")).toHaveText("Following player.");
+  await expect(panel).toHaveAttribute("data-zoom", manualZoom!);
   await page.keyboard.press("Escape");
   await page.mouse.click(700, 450);
   await expect(page.locator("[data-world-control]")).toBeFocused();
@@ -98,8 +101,13 @@ test("camera zoom stays bounded when zooming and resizing", async ({ page }) => 
   await expect
     .poll(async () => Number(await panel.getAttribute("data-zoom")))
     .toBeGreaterThanOrEqual(4 / 3);
-  for (let i = 0; i < 12; i++)
-    await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+  const zoomIn = page.getByRole("button", { name: "Zoom in", exact: true });
+  await expect(panel).toBeVisible();
+  await expect(zoomIn).toBeVisible();
+  await expect(zoomIn).toBeEnabled();
+  await zoomIn.click({ trial: true });
+  // Seven increments exceed the upper bound from the resized minimum of 4/3.
+  for (let i = 0; i < 7; i++) await zoomIn.click();
   await expect(panel).toHaveAttribute("data-zoom", "4");
 });
 

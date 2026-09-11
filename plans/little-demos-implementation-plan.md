@@ -436,7 +436,7 @@ interface DemoDefinition {
   title: string;
   summary: string;
   category: string;
-  attractionId: string;
+  attractionId: string | null;
   load: () => Promise<DemoModule>;
   status: "available" | "draft" | "coming-soon";
   tags: string[];

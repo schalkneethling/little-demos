@@ -2,6 +2,28 @@ import { describe, expect, test, vi } from "vite-plus/test";
 import { createRuntimeManager } from "../../src/world/runtime-manager.ts";
 
 describe("world runtime manager", () => {
+  test("a stale mount cannot reuse or clear a newer pending mount", async () => {
+    const finishes: Array<(runtime: { destroy(): void }) => void> = [];
+    const start = vi.fn(
+      () => new Promise<{ destroy(): void }>((resolve) => finishes.push(resolve)),
+    );
+    const manager = createRuntimeManager(start);
+    const old = manager.mount();
+    manager.unmount();
+    const current = manager.mount();
+    expect(start).toHaveBeenCalledTimes(2);
+    const staleDestroy = vi.fn();
+    finishes[0]!({ destroy: staleDestroy });
+    await old;
+    expect(staleDestroy).toHaveBeenCalledOnce();
+    expect(manager.mount()).toBe(current);
+    const destroy = vi.fn();
+    finishes[1]!({ destroy });
+    await current;
+    manager.unmount();
+    expect(destroy).toHaveBeenCalledOnce();
+  });
+
   test("mounts once and destroys the mounted runtime once", async () => {
     const destroy = vi.fn();
     const start = vi.fn(async () => ({ destroy }));

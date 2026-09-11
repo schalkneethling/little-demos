@@ -4,6 +4,7 @@ import type {
   WorldPoint,
 } from "../attractions/attraction-types";
 import type { MapRectangle } from "../map/fairground-map";
+import { isAttractionInteractive } from "../attractions/attraction-controller";
 
 interface PlaceholderAssetDefinition {
   key: string;
@@ -82,7 +83,7 @@ export function createAttractionRenderPlan(
       collisionShapes: attraction.collisionShapes,
       interactionZone: attraction.interactionZone,
       entrancePosition: attraction.entrancePosition,
-      interactive: attraction.status === "available" && attraction.demoId !== null,
+      interactive: isAttractionInteractive(attraction),
     };
   });
 }

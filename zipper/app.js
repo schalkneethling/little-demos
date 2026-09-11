@@ -1,3 +1,5 @@
+import { transformGzip } from "./streams.js";
+
 const COMPRESSED_EXTENSIONS = new Set([
   "zip",
   "gz",
@@ -62,6 +64,7 @@ class FileDropzone extends HTMLElement {
 
     this.dropzone.addEventListener("drop", (event) => {
       event.preventDefault();
+      if (this.input.disabled) return;
       this.dropzone.dataset.dragging = "false";
       const [file] = event.dataTransfer.files;
       this.input.files = event.dataTransfer.files;
@@ -221,7 +224,7 @@ class GzipTool extends HTMLElement {
             <h2 class="section-heading"></h2>
             <p class="section-copy"></p>
 
-            <div class="status-banner" data-tone="neutral">
+            <div class="status-banner" data-tone="neutral" role="status" aria-live="polite">
               Select a file to get started.
             </div>
 
@@ -287,6 +290,7 @@ class GzipTool extends HTMLElement {
 
     this.modeButtons.forEach((button) => {
       button.addEventListener("click", () => {
+        if (this.processing) return;
         this.mode = button.dataset.mode;
         this.selectedFile = null;
         this.result.clear();
@@ -296,18 +300,25 @@ class GzipTool extends HTMLElement {
     });
 
     this.dropzone.addEventListener("file-selected", (event) => {
+      if (this.processing) return;
       this.selectedFile = event.detail.file;
       this.result.clear();
       this.updateUi();
     });
 
     this.actionButton.addEventListener("click", async () => {
-      if (!this.selectedFile) {
+      if (!this.selectedFile || this.processing) {
         return;
       }
 
       this.setStatus("Working with the stream now. This stays in your browser.", "neutral");
       this.actionButton.disabled = true;
+      this.processing = true;
+      this.resetButton.disabled = true;
+      this.dropzone.input.disabled = true;
+      this.modeButtons.forEach((button) => {
+        button.disabled = true;
+      });
 
       try {
         if (this.mode === "compress") {
@@ -319,11 +330,18 @@ class GzipTool extends HTMLElement {
         this.result.clear();
         this.setStatus(error.message, "warning");
       } finally {
+        this.processing = false;
+        this.resetButton.disabled = false;
+        this.dropzone.input.disabled = false;
+        this.modeButtons.forEach((button) => {
+          button.disabled = false;
+        });
         this.actionButton.disabled = !this.selectedFile;
       }
     });
 
     this.resetButton.addEventListener("click", () => {
+      if (this.processing) return;
       this.selectedFile = null;
       this.dropzone.clear();
       this.result.clear();
@@ -399,8 +417,7 @@ class GzipTool extends HTMLElement {
   }
 
   async compressFile(file) {
-    const compressedStream = file.stream().pipeThrough(new CompressionStream("gzip"));
-    const blob = await new Response(compressedStream).blob();
+    const blob = await transformGzip(file);
     const suggestedName = `${file.name}.gz`;
     const note =
       getCompressionWarning(file.name) ||
@@ -421,9 +438,9 @@ class GzipTool extends HTMLElement {
     let blob;
 
     try {
-      const decompressedStream = file.stream().pipeThrough(new DecompressionStream("gzip"));
-      blob = await new Response(decompressedStream).blob();
-    } catch {
+      blob = await transformGzip(file, true);
+    } catch (error) {
+      if (error.message.includes("processing limit")) throw error;
       throw new Error("The selected file could not be decompressed as gzip data.");
     }
 

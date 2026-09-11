@@ -197,6 +197,11 @@ download-result {
   transform: translateY(-2px);
 }
 
+.dropzone:focus-within {
+  outline: 3px solid currentcolor;
+  outline-offset: 4px;
+}
+
 .dropzone-input {
   cursor: pointer;
   inset: 0;

@@ -3,6 +3,18 @@ import { readVisited, writeVisited } from "../../src/app/visited-storage";
 
 describe("visited persistence", () => {
   const known = new Set(["zipper", "dynamic-javascript-imports"]);
+  test("does not write payloads that cannot be read back within the bound", () => {
+    let written = false;
+    writeVisited(
+      {
+        setItem: () => {
+          written = true;
+        },
+      },
+      new Set(["x".repeat(4096)]),
+    );
+    expect(written).toBe(false);
+  });
   test("accepts only known IDs from the current version", () => {
     expect(
       readVisited({ getItem: () => '{"version":1,"ids":["zipper","unknown",4,"zipper"]}' }, known),

@@ -226,7 +226,7 @@ export function createFairgroundScene({
             this.#reportCamera();
             break;
           case "camera-return":
-            this.#returnCamera();
+            this.#returnCamera(true);
             break;
           case "activate-controls":
             this.#controlsActive = true;
@@ -451,10 +451,18 @@ export function createFairgroundScene({
       });
     }
 
-    #returnCamera() {
+    #returnCamera(resetZoom = false) {
       this.#manualCamera = false;
       this.cameras.main.setZoom(
-        getVoidSafeCameraZoom(
+        clampCameraZoom(
+          resetZoom
+            ? getVoidSafeCameraZoom(
+                FAIRGROUND_MAP.width,
+                FAIRGROUND_MAP.height,
+                this.scale.gameSize.width,
+                this.scale.gameSize.height,
+              )
+            : this.cameras.main.zoom,
           FAIRGROUND_MAP.width,
           FAIRGROUND_MAP.height,
           this.scale.gameSize.width,

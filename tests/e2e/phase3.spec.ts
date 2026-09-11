@@ -1,12 +1,18 @@
 import { expect, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { chunks } from "../helpers/chunk-patterns";
 
 test("a failed validation module prevents world startup without losing the directory", async ({
   page,
 }) => {
-  await page.route("**/assets/validate-catalog-*.js", (route) => route.abort());
+  let observed = false;
+  await page.route(chunks.validation, (route) => {
+    observed = true;
+    return route.abort();
+  });
   await page.goto("/");
   await expect(page.locator("[data-world-status]")).toHaveText("Fairground unavailable.");
+  expect(observed).toBe(true);
   await expect(page.locator("[data-explore]")).toBeDisabled();
   await page.getByRole("link", { name: "Browse all demos" }).click();
   await page.locator('[data-open-demo="zipper"]').click();
@@ -39,7 +45,7 @@ test("the shared catalog exposes coming-soon entries without misleading actions"
 test("a coming-soon deep link never mounts a demo or blocks available demos", async ({ page }) => {
   const imports: string[] = [];
   page.on("request", (request) => {
-    if (/\/demo-[^/]+\.js/.test(request.url())) imports.push(request.url());
+    if (chunks.demo.test(request.url())) imports.push(request.url());
   });
   await page.goto("/?demo=funhouse");
   await expect(page.locator("[data-explore]")).toBeEnabled();
@@ -49,5 +55,6 @@ test("a coming-soon deep link never mounts a demo or blocks available demos", as
   await page.locator('[data-open-demo="zipper"]').click();
   await expect(page.locator("[data-demo-status]")).toHaveText("Demo ready.");
   await page.keyboard.press("Escape");
+  expect(imports.length).toBeGreaterThan(0);
   await expect(page.locator('[data-open-demo="zipper"]')).toBeFocused();
 });

@@ -7,12 +7,14 @@ export function setupSliderNavigation(slider, track) {
   }
 
   const scrollAmount = () => track.clientWidth * 0.85;
+  const behavior = () =>
+    matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
 
   previousButton.addEventListener("click", () => {
-    track.scrollBy({ left: -scrollAmount(), behavior: "smooth" });
+    track.scrollBy({ left: -scrollAmount(), behavior: behavior() });
   });
 
   nextButton.addEventListener("click", () => {
-    track.scrollBy({ left: scrollAmount(), behavior: "smooth" });
+    track.scrollBy({ left: scrollAmount(), behavior: behavior() });
   });
 }

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { chunks } from "../helpers/chunk-patterns";
 import AxeBuilder from "@axe-core/playwright";
 import { gzipSync, gunzipSync } from "node:zlib";
 import { readFile, stat } from "node:fs/promises";
@@ -69,13 +70,13 @@ test("the dynamic import demo loads navigation on demand and responds to its but
   page.on("request", (request) => requests.push(request.url()));
   await page.goto("/");
   await expect(page.locator("[data-explore]")).toBeEnabled();
-  expect(requests.some((url) => /navigation-.*\.js/.test(url))).toBe(false);
+  expect(requests.some((url) => chunks.navigation.test(url))).toBe(false);
   await page.goto("/?demo=dynamic-javascript-imports");
   const track = page.getByRole("region", { name: "Cards with navigation", exact: true });
   await expect(track).toBeVisible();
   await page.getByRole("button", { name: "Next", exact: true }).click();
   await expect.poll(() => track.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
-  expect(requests.some((url) => /navigation-.*\.js/.test(url))).toBe(true);
+  expect(requests.some((url) => chunks.navigation.test(url))).toBe(true);
 });
 
 test("an unknown deep link leaves a usable document", async ({ page }) => {
@@ -167,9 +168,14 @@ test("directory opens both demos repeatedly and preserves visited state", async 
 });
 
 test("directory remains usable when the world cannot load", async ({ page }) => {
-  await page.route("**/assets/create-game-*.js", (route) => route.abort());
+  let observed = false;
+  await page.route(chunks.world, (route) => {
+    observed = true;
+    return route.abort();
+  });
   await page.goto("/");
   await expect(page.locator("[data-world-status]")).toContainText("unavailable");
+  expect(observed).toBe(true);
   await page.getByRole("link", { name: "Browse all demos" }).click();
   await page.locator('[data-open-demo="zipper"]').click();
   await expect(page.locator("[data-demo-status]")).toHaveText("Demo ready.");
@@ -190,6 +196,15 @@ for (const reducedMotion of [false, true]) {
     await page.locator("[data-explore]").click();
     await expect(world).toBeFocused();
     await page.keyboard.down("ArrowLeft");
+    await expect
+      .poll(
+        async () =>
+          Number(
+            (await page.locator("[data-debug-position]").textContent())?.match(/x (\d+)/)?.[1],
+          ),
+        { timeout: 20_000 },
+      )
+      .toBeLessThan(900);
     await expect(prompt).toBeVisible({ timeout: 20_000 });
     await page.keyboard.up("ArrowLeft");
     await expect(dialog).not.toBeVisible();
@@ -215,7 +230,7 @@ for (const reducedMotion of [false, true]) {
 
 test("a failed demo import offers working Retry and Close actions", async ({ page }) => {
   let fail = true;
-  await page.route("**/assets/demo-*.js", (route) => {
+  await page.route(chunks.demo, (route) => {
     if (fail) {
       fail = false;
       return route.abort();
@@ -224,6 +239,7 @@ test("a failed demo import offers working Retry and Close actions", async ({ pag
   });
   await page.goto("/?demo=dynamic-javascript-imports");
   await expect(page.locator("[data-demo-status]")).toContainText("could not load");
+  expect(fail).toBe(false);
   await page.getByRole("button", { name: "Retry", exact: true }).click();
   await expect(page.locator("[data-demo-status]")).toHaveText("Demo ready.");
   await page.getByRole("button", { name: "Close demo", exact: true }).click();
@@ -235,12 +251,15 @@ test("closing while a demo import is pending prevents a late mount", async ({ pa
   const blocked = new Promise<void>((resolve) => {
     release = resolve;
   });
-  await page.route("**/assets/demo-*.js", async (route) => {
+  let observed = false;
+  await page.route(chunks.demo, async (route) => {
+    observed = true;
     await blocked;
     await route.continue();
   });
   await page.goto("/?demo=dynamic-javascript-imports");
   await expect(page.locator("[data-demo-status]")).toHaveText("Loading demo…");
+  await expect.poll(() => observed).toBe(true);
   await page.getByRole("button", { name: "Close demo", exact: true }).click();
   await expect(page.locator("[data-demo-dialog]")).not.toBeVisible();
   release();

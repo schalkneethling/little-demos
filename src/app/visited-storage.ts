@@ -28,7 +28,8 @@ export function readVisited(
 
 export function writeVisited(storage: Pick<Storage, "setItem">, ids: ReadonlySet<string>): void {
   try {
-    storage.setItem(key, JSON.stringify({ version: 1, ids: [...ids] }));
+    const value = JSON.stringify({ version: 1, ids: [...ids] });
+    if (value.length <= maximumLength) storage.setItem(key, value);
   } catch {
     // A private or full store must not prevent opening and closing demos.
   }

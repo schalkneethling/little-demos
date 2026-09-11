@@ -1,9 +1,23 @@
 import { expect, test, type Page } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+test("mobile world status remains in the accessibility tree", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/");
+  const status = page.locator("[data-world-status]");
+  await expect(status).toHaveText(
+    "Fairground ready. Choose Explore, or focus the fairground, to begin.",
+  );
+  await expect(status).not.toHaveCSS("display", "none");
+  await expect(status).toHaveCSS("clip-path", "inset(50%)");
+  await expect(status).toMatchAriaSnapshot(
+    "- status: Fairground ready. Choose Explore, or focus the fairground, to begin.",
+  );
+});
+
 async function listenForKeyPrevention(page: Page) {
   await page.evaluate(() => {
-    window.__littleDemosKeyPrevented = false;
+    window.__littleDemosKeyPrevented = undefined;
     document.addEventListener(
       "keydown",
       (event) => {
