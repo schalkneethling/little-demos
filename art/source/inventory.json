@@ -1,0 +1,92 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "key": "attraction/arcade/base",
+      "kind": "transparent-raster",
+      "sourcePath": "art/source/arcade.png",
+      "runtimePath": "src/assets/runtime/attraction/arcade/base.png",
+      "sourceRect": { "x": 76, "y": 75, "width": 1101, "height": 1059 },
+      "output": { "width": 320, "height": 310 },
+      "contentBox": { "x": 2, "y": 2, "width": 316, "height": 306, "gravity": "south" },
+      "anchor": { "x": 160, "y": 310 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 300, "height": 190, "color": "#31777a" }
+    },
+    {
+      "key": "player/walk",
+      "kind": "transparent-raster",
+      "sourcePath": "art/source/player-walk-v2.png",
+      "runtimePath": "src/assets/runtime/player/walk.png",
+      "sourceRect": { "x": 0, "y": 0, "width": 1246, "height": 1263 },
+      "output": { "width": 136, "height": 232 },
+      "contentBox": { "x": 2, "y": 1, "width": 30, "height": 53, "gravity": "south" },
+      "anchor": { "x": 17, "y": 45 },
+      "frames": {
+        "columns": 4,
+        "rows": 4,
+        "frameWidth": 34,
+        "frameHeight": 58,
+        "sourceRects": [
+          { "x": 102, "y": 39, "width": 113, "height": 248 },
+          { "x": 397, "y": 41, "width": 130, "height": 247 },
+          { "x": 718, "y": 39, "width": 118, "height": 249 },
+          { "x": 1017, "y": 40, "width": 121, "height": 248 },
+          { "x": 104, "y": 337, "width": 110, "height": 253 },
+          { "x": 399, "y": 338, "width": 124, "height": 250 },
+          { "x": 717, "y": 338, "width": 111, "height": 252 },
+          { "x": 1018, "y": 338, "width": 128, "height": 252 },
+          { "x": 94, "y": 642, "width": 112, "height": 253 },
+          { "x": 396, "y": 646, "width": 125, "height": 247 },
+          { "x": 714, "y": 644, "width": 113, "height": 251 },
+          { "x": 1020, "y": 644, "width": 129, "height": 251 },
+          { "x": 100, "y": 947, "width": 115, "height": 249 },
+          { "x": 398, "y": 948, "width": 120, "height": 250 },
+          { "x": 716, "y": 947, "width": 115, "height": 253 },
+          { "x": 1025, "y": 947, "width": 126, "height": 253 }
+        ]
+      },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 34, "height": 58, "color": "#173449" }
+    },
+    {
+      "key": "prop/planter",
+      "kind": "transparent-raster",
+      "sourcePath": "art/source/planter.png",
+      "runtimePath": "src/assets/runtime/prop/planter.png",
+      "sourceRect": { "x": 299, "y": 246, "width": 657, "height": 772 },
+      "output": { "width": 28, "height": 28 },
+      "contentBox": { "x": 1, "y": 1, "width": 26, "height": 26, "gravity": "south" },
+      "anchor": { "x": 14, "y": 28 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 28, "height": 28, "color": "#31777a" }
+    },
+    {
+      "key": "surface/ground/grass-a",
+      "kind": "deterministic-surface",
+      "recipePath": "art/source/recipes/grass-a.json",
+      "runtimePath": "src/assets/runtime/surface/ground/grass-a.png",
+      "seed": 42117,
+      "alphaMode": "opaque-fill",
+      "output": { "width": 128, "height": 128 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 128, "height": 128, "color": "#6d9a83" }
+    },
+    {
+      "key": "surface/path/clay",
+      "kind": "deterministic-surface",
+      "recipePath": "art/source/recipes/clay.json",
+      "runtimePath": "src/assets/runtime/surface/path/clay.png",
+      "seed": 73019,
+      "alphaMode": "opaque-fill",
+      "output": { "width": 128, "height": 128 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 128, "height": 128, "color": "#d8b8a0" }
+    }
+  ]
+}
