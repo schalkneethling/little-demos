@@ -11,6 +11,8 @@ import { ASSET_BY_KEY } from "../assets/asset-registry";
 import type { AssetLoadStates } from "../assets/asset-loading";
 import { getPlayerArtFrame, type PlayerFacing } from "../rendering/player-art";
 import { getVisualFixture } from "../rendering/visual-fixtures";
+import { createSilhouetteGlow, GLOW_PADDING } from "../rendering/silhouette-glow";
+import { ARCADE_PLANTERS } from "../rendering/arcade-decoration";
 import type { WorldBridge } from "../bridge/world-events";
 import type { KeyboardInput } from "../input/keyboard-input";
 import { createDiagnosticsThrottle } from "../diagnostics";
@@ -28,6 +30,7 @@ import {
   createAttractionRenderPlan,
   getAttractionVisualState,
   getInteractionMarkerPosition,
+  getAttractionCaptionPosition,
   type AttractionRenderPlan,
 } from "../rendering/attraction-render-plan";
 import { getCameraFollowLerp, getVoidSafeCameraZoom } from "../systems/camera-system";
@@ -48,8 +51,10 @@ interface FairgroundSceneDependencies {
 
 interface AttractionVisual {
   plan: AttractionRenderPlan;
-  structure: Phaser.GameObjects.Rectangle;
+  structure: Phaser.GameObjects.Rectangle | null;
   artwork: Phaser.GameObjects.Image | null;
+  glow: Phaser.GameObjects.Image | null;
+  glowKeys: { warm: string; contrast: string } | null;
   label: Phaser.GameObjects.Text;
   interactionMarker: Phaser.GameObjects.Container | null;
   visited: boolean;
@@ -63,6 +68,7 @@ export function createFairgroundScene({
 }: FairgroundSceneDependencies) {
   return class FairgroundScene extends Phaser.Scene {
     #player!: Phaser.GameObjects.Rectangle | Phaser.GameObjects.Sprite;
+    #playerShadow?: Phaser.GameObjects.Ellipse;
     #playerFacing: PlayerFacing = "south";
     #playerFrame = 0;
     #artStates: AssetLoadStates = {};
@@ -136,28 +142,41 @@ export function createFairgroundScene({
           art && this.#artReady(art.key)
             ? this.add.image(art.x, art.y, art.key).setOrigin(0).setDepth(plan.structureDepth)
             : null;
-        const placeholder = this.add
-          .rectangle(
-            artwork && art ? art.x + art.width / 2 : plan.center.x,
-            artwork && art ? art.y + art.height / 2 : plan.center.y,
-            artwork && art ? art.width : plan.size.width,
-            artwork && art ? art.height : plan.size.height,
-            plan.baseColor,
-            artwork ? 0 : 1,
-          )
-          .setDepth(plan.structureDepth + 0.005);
-        placeholder.setStrokeStyle(artwork ? 0 : 4, 0x25362d);
+        const glowKeys = artwork && art ? createSilhouetteGlow(this.textures, art) : null;
+        const glow =
+          glowKeys && art
+            ? this.add
+                .image(art.x - GLOW_PADDING, art.y - GLOW_PADDING, glowKeys.warm)
+                .setOrigin(0)
+                .setDepth(plan.structureDepth - 0.01)
+                .setVisible(false)
+            : null;
+        const placeholder = artwork
+          ? null
+          : this.add
+              .rectangle(
+                plan.center.x,
+                plan.center.y,
+                plan.size.width,
+                plan.size.height,
+                plan.baseColor,
+              )
+              .setDepth(plan.structureDepth + 0.005);
+        placeholder?.setStrokeStyle(4, 0x25362d);
 
+        const captionPosition = getAttractionCaptionPosition(plan);
         const label = this.add
-          .text(plan.labelPosition.x, plan.labelPosition.y, plan.label, {
-            align: "center",
-            color: "#ffffff",
+          .text(captionPosition.x, captionPosition.y, plan.label, {
+            align: art ? "left" : "center",
+            color: art ? "#173449" : "#ffffff",
             fontFamily: "sans-serif",
-            fontSize: "22px",
+            fontSize: art ? "14px" : "22px",
             fontStyle: "bold",
-            ...(art ? { backgroundColor: "#173449", padding: { x: 10, y: 6 } } : {}),
+            ...(art
+              ? { stroke: "#fff8e6", strokeThickness: 3, wordWrap: { width: 220 }, lineSpacing: 2 }
+              : {}),
           })
-          .setOrigin(0.5)
+          .setOrigin(art ? 0 : 0.5)
           .setDepth(plan.labelDepth);
 
         for (const shape of plan.collisionShapes) {
@@ -190,15 +209,22 @@ export function createFairgroundScene({
             )
             .setStrokeStyle(debug && !this.#visualTest ? 2 : 0, 0x25362d);
           const interactionText = this.add
-            .text(markerPosition.x, markerPosition.y, "ENTER / SPACE", {
-              backgroundColor: "#25362d",
-              color: "#fff8d8",
-              fontFamily: "sans-serif",
-              fontSize: "18px",
-              fontStyle: "bold",
-              padding: { x: 10, y: 6 },
-            })
-            .setOrigin(0.5);
+            .text(
+              markerPosition.x,
+              markerPosition.y,
+              art ? "Enter / Space to open" : "ENTER / SPACE",
+              {
+                ...(art
+                  ? { stroke: "#fff8e6", strokeThickness: 3 }
+                  : { backgroundColor: "#25362d" }),
+                color: art ? "#173449" : "#fff8d8",
+                fontFamily: "sans-serif",
+                fontSize: art ? "13px" : "18px",
+                fontStyle: "bold",
+                padding: art ? { x: 0, y: 0 } : { x: 10, y: 6 },
+              },
+            )
+            .setOrigin(art ? 0 : 0.5);
           interactionMarker = this.add
             .container(0, 0, [zoneOutline, interactionText])
             .setDepth(WORLD_OVERLAY_DEPTH)
@@ -209,17 +235,16 @@ export function createFairgroundScene({
           plan,
           structure: placeholder,
           artwork,
+          glow,
+          glowKeys,
           label,
           interactionMarker,
           visited: false,
         });
       }
 
-      // Low planters decorate already-solid arcade corners, never the approach.
-      for (const position of [
-        { x: 236, y: 1050 },
-        { x: 484, y: 1050 },
-      ]) {
+      // Authored decoration stays within the existing solid arcade footprint.
+      for (const position of ARCADE_PLANTERS) {
         const prop = ASSET_BY_KEY.get("prop/planter");
         const art = prop?.runtime;
         if (art?.anchor && this.#artReady("prop/planter")) {
@@ -253,6 +278,7 @@ export function createFairgroundScene({
           );
       if (this.#player instanceof Phaser.GameObjects.Rectangle)
         this.#player.setStrokeStyle(3, 0xffffff);
+      this.#playerShadow = this.add.ellipse(this.#player.x, this.#player.y, 20, 8, 0x173449, 0.15);
       this.physics.add.existing(this.#player);
 
       const body = this.#player.body as Phaser.Physics.Arcade.Body;
@@ -473,12 +499,15 @@ export function createFairgroundScene({
           selected,
           visited: visual.visited,
           highContrast: this.#settings.highContrastWorldIndicators,
+          artworkReady: visual.artwork !== null,
         });
-        visual.structure.setFillStyle(state.fillColor, visual.artwork ? 0 : 1);
-        visual.structure.setStrokeStyle(
-          visual.artwork && !selected && !visual.visited ? 0 : state.strokeWidth,
-          state.strokeColor,
-        );
+        visual.structure?.setFillStyle(state.fillColor);
+        visual.structure?.setStrokeStyle(state.strokeWidth, state.strokeColor);
+        if (visual.glow && visual.glowKeys) {
+          visual.glow
+            .setTexture(state.glow?.highContrast ? visual.glowKeys.contrast : visual.glowKeys.warm)
+            .setVisible(state.glow?.visible ?? false);
+        }
         const art = visual.plan.artwork;
         if (visual.artwork && art) {
           visual.artwork.setTexture(
@@ -647,6 +676,7 @@ export function createFairgroundScene({
     #updatePlayerDepth() {
       const body = this.#player.body as Phaser.Physics.Arcade.Body;
       this.#player.setDepth(body.bottom);
+      this.#playerShadow?.setPosition(body.center.x, body.bottom).setDepth(body.bottom - 0.02);
     }
   };
 }

@@ -4,6 +4,8 @@ import { cancelPendingImage, resolveAssetState } from "../../src/world/assets/as
 import {
   createAttractionRenderPlan,
   getInteractionMarkerPosition,
+  getAttractionCaptionPosition,
+  getAttractionVisualState,
 } from "../../src/world/rendering/attraction-render-plan";
 import type { AttractionDefinition } from "../../src/world/attractions/attraction-types";
 
@@ -92,7 +94,35 @@ describe("production art without geometry changes", () => {
       artwork: { key: "proof", x: 200, y: 750, width: 320, height: 310 },
       collisionShapes: attraction.collisionShapes,
     });
-    expect(getInteractionMarkerPosition(plan!)).toEqual({ x: 360, y: 900 });
+    expect(getAttractionCaptionPosition(plan!)).toEqual({ x: 540, y: 1072 });
+    expect(getInteractionMarkerPosition(plan!)).toEqual({ x: 540, y: 1132 });
+    expect(getAttractionCaptionPosition(plan!, { width: 700, height: 1100 })).toEqual({
+      x: 12,
+      y: 1004,
+    });
+    for (const selected of [false, true]) {
+      for (const visited of [false, true]) {
+        expect(
+          getAttractionVisualState(plan!, { selected, visited, highContrast: false }),
+        ).toMatchObject({ strokeWidth: 0, glow: { visible: selected, highContrast: false } });
+      }
+    }
+    expect(
+      getAttractionVisualState(plan!, { selected: true, visited: true, highContrast: true }),
+    ).toMatchObject({
+      strokeWidth: 0,
+      glow: { visible: true, highContrast: true },
+      label: "Proof\nVisited",
+      showInteractionMarker: true,
+    });
+    expect(
+      getAttractionVisualState(plan!, {
+        selected: true,
+        visited: false,
+        highContrast: false,
+        artworkReady: false,
+      }),
+    ).toMatchObject({ strokeWidth: 9 });
     expect(getInteractionMarkerPosition({ ...plan!, artwork: undefined })).toEqual({
       x: 360,
       y: 1092,

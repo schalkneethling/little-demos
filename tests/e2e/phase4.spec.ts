@@ -12,10 +12,8 @@ const arcadeImage = /\/base(?:-[\w-]+)?\.png(?:\?.*)?$/;
 const playerImage = /\/walk(?:-[\w-]+)?\.png(?:\?.*)?$/;
 const grassImage = /\/grass-a(?:-[\w-]+)?\.png(?:\?.*)?$/;
 const runtimeImage = /\/(?:base|walk|planter|grass-a|clay)(?:-[\w-]+)?\.png(?:\?.*)?$/;
-// A canvas locator screenshot still includes overlapping DOM siblings. Hide only
-// the live debug counters, never the player, doorway, labels, or interaction state.
 // Locator screenshots include overlapping siblings. Compare world art, not the
-// platform's system-font HTML shell (covered by the separate UI/a11y tests).
+// HTML shell (covered by the separate UI/a11y tests in the same pinned container).
 // Visibility preserves layout; every canvas pixel, including labels, stays visible.
 const visualScreenshotStyle =
   "body { visibility: hidden !important; } [data-world-canvas] canvas { visibility: visible !important; }";
@@ -314,8 +312,8 @@ test("the explicit arcade visual fixture renders identically across fresh loads"
   const first = await capture();
   const second = await capture();
   await testInfo.attach("arcade-deterministic-scene", { body: second, contentType: "image/png" });
-  // Fresh-load equality catches nondeterminism separately from the reviewed,
-  // platform-specific baseline's intentional visual-regression gate.
+  // Fresh-load equality catches nondeterminism separately from the reviewed
+  // Linux-amd64 baseline's intentional visual-regression gate.
   expect(createHash("sha256").update(second).digest("hex")).toBe(
     createHash("sha256").update(first).digest("hex"),
   );
