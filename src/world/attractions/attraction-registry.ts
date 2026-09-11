@@ -11,8 +11,8 @@ export const ATTRACTIONS = [
     entrancePosition: { x: 360, y: 1_085 },
     interactionZone: { x: 270, y: 1_060, width: 180, height: 110 },
     collisionShapes: [{ type: "rectangle", x: 210, y: 870, width: 300, height: 190 }],
-    assetKey: "arcade-placeholder",
-    highlightAssetKey: "arcade-placeholder-selected",
+    assetKey: "attraction/arcade/base",
+    presentation: { worldAnchor: { x: 360, y: 1_060 } },
     exitAnimation: {
       from: { x: 360, y: 1_085 },
       to: { x: 360, y: 1_160 },

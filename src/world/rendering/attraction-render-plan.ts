@@ -5,17 +5,17 @@ import type {
 } from "../attractions/attraction-types";
 import type { MapRectangle } from "../map/fairground-map";
 import { isAttractionInteractive } from "../attractions/attraction-controller";
-
-interface PlaceholderAssetDefinition {
-  key: string;
-  placeholder: {
-    width: number;
-    height: number;
-    color: number;
-  };
-}
+import type { AssetDefinition } from "../assets/asset-types";
 
 export interface AttractionRenderPlan {
+  artwork?: {
+    key: string;
+    selectedKey?: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
   id: string;
   center: WorldPoint;
   size: { width: number; height: number };
@@ -39,6 +39,11 @@ export interface AttractionVisualState {
   showInteractionMarker: boolean;
 }
 
+/** Keep the production interaction plaque away from the player's approach/exit. */
+export function getInteractionMarkerPosition(plan: AttractionRenderPlan): WorldPoint {
+  return { x: plan.entrancePosition.x, y: plan.interactionZone.y + (plan.artwork ? -160 : 32) };
+}
+
 function getAttractionLabel(attraction: AttractionDefinition) {
   switch (attraction.status) {
     case "coming-soon":
@@ -52,7 +57,7 @@ function getAttractionLabel(attraction: AttractionDefinition) {
 
 export function createAttractionRenderPlan(
   attractions: readonly AttractionDefinition[],
-  assets: ReadonlyMap<string, PlaceholderAssetDefinition>,
+  assets: ReadonlyMap<string, AssetDefinition>,
 ): AttractionRenderPlan[] {
   return attractions.map((attraction) => {
     const asset = assets.get(attraction.assetKey);
@@ -68,9 +73,27 @@ export function createAttractionRenderPlan(
       x: attraction.position.x + width / 2,
       y: attraction.position.y + height / 2,
     };
-    const structureDepth = attraction.sortAnchor?.y ?? attraction.position.y + height;
+    const structureDepth =
+      attraction.sortAnchor?.y ??
+      attraction.presentation?.worldAnchor.y ??
+      attraction.position.y + height;
+    const runtime = asset.runtime;
+    const anchor = runtime?.anchor;
+    const placement = attraction.presentation?.worldAnchor;
+    const artwork =
+      runtime && anchor && placement
+        ? {
+            key: asset.key,
+            ...(highlightAsset?.runtime ? { selectedKey: highlightAsset.key } : {}),
+            x: placement.x - anchor.x,
+            y: placement.y - anchor.y,
+            width: runtime.width,
+            height: runtime.height,
+          }
+        : undefined;
 
     return {
+      ...(artwork ? { artwork } : {}),
       id: attraction.id,
       center,
       size: { width, height },

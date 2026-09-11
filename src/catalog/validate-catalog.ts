@@ -1,4 +1,5 @@
 import type { Catalog } from "./catalog";
+import { validateRuntimeAssets } from "../world/assets/validate-runtime-assets";
 import type { AttractionDefinition, WorldPoint } from "../world/attractions/attraction-types";
 import type { FairgroundMap, MapRectangle } from "../world/map/fairground-map";
 import {
@@ -189,6 +190,8 @@ export function validateAttractionGeometry(
       errors.push(`Position is outside the map: ${id}`);
     if (attraction.sortAnchor && !pointInside(attraction.sortAnchor, bounds(map)))
       errors.push(`Sort anchor is outside the map: ${id}`);
+    if (attraction.presentation && !pointInside(attraction.presentation.worldAnchor, bounds(map)))
+      errors.push(`Presentation anchor is outside the map: ${id}`);
     if (!rectangleInside(attraction.interactionZone, map))
       errors.push(`Interaction zone is outside the map: ${id}`);
     for (const shape of attraction.collisionShapes) {
@@ -244,6 +247,7 @@ export function validateAttractionGeometry(
 export function validateCatalog(catalog: Catalog, map: FairgroundMap): string[] {
   const { attractions, demos, assets } = catalog;
   const errors = validateAttractionGeometry(attractions, map);
+  errors.push(...validateRuntimeAssets(assets));
   errors.push(
     ...duplicateErrors(
       demos.map(({ id }) => id),
@@ -280,6 +284,40 @@ export function validateCatalog(catalog: Catalog, map: FairgroundMap): string[] 
     const asset = assetByKey.get(attraction.assetKey);
     if (asset && !rectangleInside({ ...attraction.position, ...asset.placeholder }, map))
       errors.push(`Attraction asset is outside the map: ${attraction.id}`);
+    if (asset?.runtime) {
+      const art = asset.runtime;
+      const placement = attraction.presentation?.worldAnchor;
+      if (!placement || !art.anchor || art.frames || art.kind !== "transparent-raster") {
+        errors.push(`Invalid attraction presentation: ${attraction.id}`);
+      } else if (
+        !rectangleInside(
+          {
+            x: placement.x - art.anchor.x,
+            y: placement.y - art.anchor.y,
+            width: art.width,
+            height: art.height,
+          },
+          map,
+        )
+      ) {
+        errors.push(`Attraction artwork is outside the map: ${attraction.id}`);
+      }
+      const selected = attraction.highlightAssetKey
+        ? assetByKey.get(attraction.highlightAssetKey)?.runtime
+        : undefined;
+      if (selected && !selected.dependsOn.includes(asset.key))
+        errors.push(`Highlight artwork must depend on its base: ${attraction.id}`);
+      if (
+        selected &&
+        (selected.width !== art.width ||
+          selected.height !== art.height ||
+          selected.anchor?.x !== art.anchor?.x ||
+          selected.anchor?.y !== art.anchor?.y ||
+          selected.frames)
+      ) {
+        errors.push(`Incompatible highlight artwork: ${attraction.id}`);
+      }
+    }
     if (attraction.status === "decorative") {
       if (attraction.demoId !== null)
         errors.push(`Decorative attraction cannot reference a demo: ${attraction.id}`);
