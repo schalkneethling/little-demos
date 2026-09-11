@@ -143,22 +143,25 @@ size, the RGBA estimate, or a passing software-rendered browser test.
 
 ## Reproducing visual checks
 
-Build with `vp build`, then run `vp run test:e2e tests/e2e/phase4.spec.ts --workers=1`.
-The committed screenshots are platform-specific (`darwin` and `linux`) and use the
-locked Playwright version, 1440 × 900 viewport, device scale 1, and reduced motion.
-Linux captures used `mcr.microsoft.com/playwright:v1.62.1-noble`; the temporary
-container configuration pointed at the production preview and did not change
-repository runtime configuration. The CI job runs the normal production-preview
-workflow against these same tests.
+Run `vp run test:e2e`. The [canonical Docker runner](../testing/playwright.md)
+installs isolated locked dependencies, builds, serves and tests entirely within
+the digest-pinned Playwright 1.62.1 Noble Linux/amd64 image. CI calls the identical
+entrypoint; a host build or host preview server is not used. Visual fixtures retain
+their 1440 × 900 viewport, device scale 1, and reduced motion.
 
-For an intentional visual change, add `--update-snapshots` on each supported
-platform and inspect all five resulting images before committing. Do not refresh
+For an intentional visual change, use `vp run test:e2e:update` and inspect all five
+resulting Linux images before committing. Linux/amd64 is now the sole approved
+baseline platform, including when invoked from an ARM Mac. Do not refresh
 baselines merely to silence a failure. Capture renders only the world canvas;
 the HTML shell is visually hidden without changing layout. The player, arcade,
 canvas labels, and interaction markers remain visible to the visual regression
 check. Separate browser tests cover HTML controls, focus, accessibility and layout.
 
 ## Hosted CI rendering correction
+
+This section records the initial integration history. Its temporary mixed-platform
+setup has since been superseded by the canonical Docker runner above; the visual
+changes are recorded in [the three-quarter revision](./three-quarter-revision.md).
 
 The first integration CI run passed all 44 functional browser cases but failed
 the five stored visual comparisons. All retries produced the same differences.
