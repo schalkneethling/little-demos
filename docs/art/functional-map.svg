@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-80 -100 2080 1510" role="img" aria-labelledby="title description">
+  <title id="title">Little Demos functional map: current geometry</title>
+  <desc id="description">A 1920 by 1280 world with three painted paths, five solid collision rectangles, entrance metadata, and one arcade production slice. Grass is walkable. The solid central plaza interrupts both main paths. The arcade is the only interactive attraction, southwest of spawn. Dashed routes are review examples, not existing painted paths.</desc>
+  <defs>
+    <pattern id="grid" width="160" height="160" patternUnits="userSpaceOnUse">
+      <path d="M160 0H0V160" fill="none" stroke="#375043" stroke-opacity="0.15" stroke-width="1"/>
+    </pattern>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10Z" fill="#143f69"/>
+    </marker>
+  </defs>
+  <g font-family="system-ui, sans-serif" fill="#172b25">
+    <text x="0" y="-55" font-size="34" font-weight="700">FUNCTIONAL MAP · 1920 × 1280 WORLD UNITS</text>
+    <text x="0" y="-18" font-size="24">Top-down geometry, not production artwork · origin (0,0), +x right, +y down</text>
+    <rect width="1920" height="1280" fill="#e3ecdf" stroke="#172b25" stroke-width="4"/>
+    <g fill="#f1dba9">
+      <rect x="840" y="0" width="240" height="1280"/>
+      <rect x="0" y="520" width="1920" height="240"/>
+      <rect x="360" y="180" width="1200" height="160"/>
+    </g>
+    <rect width="1920" height="1280" fill="url(#grid)"/>
+    <g fill="none" stroke="#143f69" stroke-width="5" stroke-dasharray="14 10" marker-end="url(#arrow)">
+      <path d="M960 1120H360V1085"/>
+      <path d="M960 1120H700V380H960"/>
+      <path d="M960 1120H1220V380H960"/>
+    </g>
+    <rect x="150" y="720" width="450" height="500" fill="none" stroke="#9b3c1d" stroke-width="5" stroke-dasharray="20 10"/>
+    <text x="160" y="770" font-size="25" fill="#853015" font-weight="700">ONE ARCADE ART SLICE</text>
+    <g fill="#bfc6c9" stroke="#273b43" stroke-width="4">
+      <rect x="230" y="190" width="250" height="230"/>
+      <rect x="1440" y="190" width="250" height="230"/>
+      <rect x="1410" y="870" width="300" height="190"/>
+      <rect x="785" y="470" width="350" height="340"/>
+      <rect x="210" y="870" width="300" height="190" fill="#a7c5de"/>
+    </g>
+    <g text-anchor="middle" font-size="25" font-weight="700">
+      <text x="355" y="275">FERRIS WHEEL</text>
+      <text x="1565" y="275">CAROUSEL</text>
+      <text x="360" y="940">ARCADE</text>
+      <text x="1560" y="940">FUNHOUSE</text>
+      <text x="960" y="580">CENTRAL PLAZA</text>
+    </g>
+    <g text-anchor="middle" font-size="23">
+      <text x="355" y="315">Decorative</text>
+      <text x="1565" y="315">Decorative</text>
+      <text x="360" y="980">Available demo</text>
+      <text x="1560" y="980">Coming soon</text>
+      <text x="960" y="630">Solid obstacle</text>
+      <text x="960" y="670">No through route</text>
+    </g>
+    <g fill="none" stroke="#675939" stroke-width="3" stroke-dasharray="7 6">
+      <rect x="295" y="420" width="120" height="80"/>
+      <rect x="1505" y="420" width="120" height="80"/>
+      <rect x="1470" y="1060" width="180" height="110"/>
+      <rect x="900" y="810" width="120" height="60"/>
+    </g>
+    <rect x="270" y="1060" width="180" height="110" fill="#f6ed94" fill-opacity="0.65" stroke="#765612" stroke-width="4"/>
+    <g fill="#fff" stroke="#172b25" stroke-width="3">
+      <circle cx="360" cy="1085" r="9"/>
+      <circle cx="355" cy="445" r="9"/>
+      <circle cx="1565" cy="445" r="9"/>
+      <circle cx="1560" cy="1085" r="9"/>
+      <circle cx="960" cy="835" r="9"/>
+    </g>
+    <path d="M360 1096V1160" fill="none" stroke="#853015" stroke-width="5" marker-end="url(#arrow)"/>
+    <g stroke="#143f69" stroke-width="3">
+      <rect x="943" y="1091" width="34" height="58" fill="#fff"/>
+      <circle cx="960" cy="1120" r="6" fill="#143f69"/>
+    </g>
+    <g font-size="24">
+      <text x="988" y="1165">Spawn P (960,1120)</text>
+      <text x="185" y="1205">Exit P (360,1160)</text>
+      <text x="630" y="930" transform="rotate(-90 630 930)">West plaza bypass</text>
+      <text x="1280" y="590" transform="rotate(90 1280 590)">East plaza bypass</text>
+      <text x="35" y="610">Painted cross-path</text>
+      <text x="640" y="255">Northern connector</text>
+      <text x="25" y="1240">Grass is walkable · no south painted connector</text>
+      <text x="0" y="1330">Solid blocks = collision · yellow = active zone · dashed boxes = inactive zone metadata</text>
+      <text x="0" y="1370">White dots = stored entrances P · blue dashed lines = example routes P · rust box = art review envelope</text>
+    </g>
+  </g>
+</svg>
