@@ -1,0 +1,74 @@
+@layer components {
+  dialog {
+    background: var(--color-panel);
+    border: 0.25rem solid var(--color-ink);
+    border-radius: var(--radius-panel);
+    box-shadow: var(--shadow-panel);
+    color: var(--color-ink);
+    inline-size: min(44rem, calc(100% - 2rem));
+    max-block-size: calc(100dvb - 2rem);
+    padding: clamp(var(--space-md), 4vw, var(--space-xl));
+  }
+
+  dialog[data-demo-dialog] {
+    inline-size: min(62rem, calc(100% - 2rem));
+  }
+
+  dialog::backdrop {
+    background: rgb(23 52 73 / 75%);
+  }
+
+  .dialog-header,
+  .demo-dialog-header,
+  [data-dialog-header] {
+    align-items: start;
+    border-block-end: 0.18rem solid var(--color-ink);
+    display: flex;
+    gap: var(--space-md);
+    justify-content: space-between;
+    margin-block-end: var(--space-lg);
+    padding-block-end: var(--space-md);
+  }
+
+  .dialog-close,
+  [data-demo-close],
+  [data-dialog-close] {
+    flex: 0 0 auto;
+  }
+
+  [data-demo-root] {
+    min-block-size: min(28rem, 65dvb);
+  }
+
+  [data-demo-root] iframe {
+    block-size: min(36rem, 65dvb);
+    border: 0.18rem solid var(--color-ink);
+    inline-size: 100%;
+  }
+
+  [data-demo-summary],
+  [data-demo-status] {
+    margin-block: var(--space-sm);
+  }
+
+  [data-demo-status] {
+    background: var(--color-mist);
+    border-inline-start: 0.28rem solid var(--color-teal);
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  @media (width <= 42rem) {
+    dialog[data-demo-dialog] {
+      inline-size: calc(100% - 1rem);
+      padding: var(--space-md);
+    }
+
+    [data-demo-root] {
+      min-block-size: 18rem;
+    }
+
+    [data-demo-root] iframe {
+      block-size: 60dvb;
+    }
+  }
+}

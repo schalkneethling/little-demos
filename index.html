@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore a tiny fairground of interactive web demos, or browse every demo in a conventional directory."
+    />
+    <title>Little Demos</title>
+  </head>
+  <body>
+    <main class="app-shell" data-app-shell>
+      <section class="fairground-host" data-fairground-host aria-labelledby="fairground-heading">
+        <h2 class="sr-only" id="fairground-heading">Fairground</h2>
+        <div
+          data-world-control
+          tabindex="0"
+          role="application"
+          aria-label="Interactive fairground"
+          aria-describedby="world-instructions"
+        >
+          <div data-world-canvas aria-hidden="true"></div>
+        </div>
+
+        <header class="site-header" data-site-header>
+          <p class="eyebrow" data-eyebrow>Step right up</p>
+          <h1>Little Demos</h1>
+          <p class="intro" data-intro>A strollable collection of tiny web experiments.</p>
+        </header>
+
+        <details class="control-deck" data-control-deck open>
+          <summary>Explore the fairground</summary>
+          <div class="control-deck-content">
+            <p class="instructions" data-instructions id="world-instructions">
+              Choose Explore, then move with the Arrow keys or WASD. Press Escape or Tab away to
+              stop world controls.
+            </p>
+            <div class="action-row" data-action-row>
+              <button class="button" data-action data-explore type="button" disabled>
+                Explore the fairground
+              </button>
+              <a
+                class="button button-secondary"
+                data-action="secondary"
+                data-open-directory
+                href="#demo-directory"
+              >
+                Browse all demos
+              </a>
+            </div>
+            <label class="motion-control" data-motion-control>
+              <input data-reduced-motion type="checkbox" />
+              Reduce fairground motion
+            </label>
+            <p class="world-status" data-world-status role="status" aria-live="polite">
+              Preparing the fairground…
+            </p>
+          </div>
+        </details>
+
+        <details class="directory" data-demo-directory id="demo-directory">
+          <summary>Demo directory</summary>
+          <div class="directory-content" data-directory-content>
+            <h2 class="sr-only">Demo directory</h2>
+            <p>
+              Browse every demo here. This list remains available if the fairground cannot load.
+            </p>
+            <ul class="directory-list" data-directory-list>
+              <li>No demos have boarded the fairground yet.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details class="camera-controls" data-camera-controls>
+          <summary>View controls</summary>
+          <div class="camera-controls-content">
+            <div class="camera-pan" role="group" aria-label="Pan fairground">
+              <button
+                type="button"
+                data-camera-action="up"
+                aria-label="Pan up"
+                title="Pan up"
+                disabled
+              >
+                ↑
+              </button>
+              <button
+                type="button"
+                data-camera-action="left"
+                aria-label="Pan left"
+                title="Pan left"
+                disabled
+              >
+                ←
+              </button>
+              <button
+                type="button"
+                data-camera-action="down"
+                aria-label="Pan down"
+                title="Pan down"
+                disabled
+              >
+                ↓
+              </button>
+              <button
+                type="button"
+                data-camera-action="right"
+                aria-label="Pan right"
+                title="Pan right"
+                disabled
+              >
+                →
+              </button>
+            </div>
+            <p>
+              Drag or scroll with two fingers to pan. Alt/Option + scroll zooms the fairground.
+              Pinch and browser zoom shortcuts magnify the page.
+            </p>
+            <div class="camera-zoom" role="group" aria-label="Fairground zoom">
+              <button
+                type="button"
+                data-camera-action="out"
+                aria-label="Zoom out"
+                title="Zoom out"
+                disabled
+              >
+                −
+              </button>
+              <output aria-label="Camera zoom" data-camera-zoom aria-live="off">100%</output>
+              <button
+                type="button"
+                data-camera-action="in"
+                aria-label="Zoom in"
+                title="Zoom in"
+                disabled
+              >
+                +
+              </button>
+            </div>
+            <p data-camera-status role="status">Following player.</p>
+            <button type="button" data-camera-action="return" disabled>Return to player</button>
+          </div>
+        </details>
+
+        <div data-attraction-prompt role="status" aria-live="polite" hidden></div>
+        <p data-loading-status role="status">Loading the fairground…</p>
+        <aside data-world-debug aria-labelledby="world-debug-heading" hidden>
+          <h2 id="world-debug-heading">World diagnostics</h2>
+          <p>Player: <output data-debug-position>x 0, y 0</output></p>
+          <p>FPS: <output data-debug-fps>0</output></p>
+        </aside>
+      </section>
+    </main>
+
+    <dialog data-demo-dialog aria-label="Interactive demo"></dialog>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

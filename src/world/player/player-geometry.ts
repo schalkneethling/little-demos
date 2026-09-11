@@ -1,0 +1,8 @@
+export const PLAYER_WIDTH = 34;
+export const PLAYER_HEIGHT = 58;
+export const PLAYER_BODY_WIDTH = 20;
+export const PLAYER_BODY_HEIGHT = 18;
+export const PLAYER_BODY_OFFSET_X = 7;
+export const PLAYER_BODY_OFFSET_Y = 36;
+export const PLAYER_GROUND_OFFSET_Y =
+  -PLAYER_HEIGHT / 2 + PLAYER_BODY_OFFSET_Y + PLAYER_BODY_HEIGHT / 2;

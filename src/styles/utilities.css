@@ -1,0 +1,81 @@
+@layer utilities {
+  [hidden] {
+    display: none !important;
+  }
+
+  .button,
+  button:not([class]),
+  [data-action] {
+    appearance: none;
+    background: var(--color-signal);
+    border: 0.18rem solid var(--color-ink);
+    border-radius: var(--radius-control);
+    box-shadow: var(--shadow-control);
+    color: var(--color-white);
+    display: inline-flex;
+    font-family: var(--font-display);
+    font-weight: 700;
+    gap: var(--space-xs);
+    justify-content: center;
+    line-height: 1.1;
+    padding: 0.7rem 1rem 0.6rem;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .button:hover,
+  button:not([class]):hover,
+  [data-action]:hover {
+    background: var(--color-signal-deep);
+    transform: translateY(-0.08rem);
+  }
+
+  .button:active,
+  button:not([class]):active,
+  [data-action]:active {
+    box-shadow: 0 0.06rem 0 var(--color-signal-deep);
+    transform: translateY(0.14rem);
+  }
+
+  .button-secondary,
+  [data-action="secondary"] {
+    background: var(--color-mist);
+    box-shadow: 0 0.2rem 0 var(--color-ink-soft);
+    color: var(--color-ink);
+  }
+
+  .button-secondary:hover,
+  [data-action="secondary"]:hover {
+    background: var(--color-sun);
+    color: var(--color-ink);
+  }
+
+  .sr-only {
+    block-size: 1px;
+    clip-path: inset(50%);
+    inline-size: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    white-space: nowrap;
+  }
+
+  .sr-only:focus {
+    block-size: auto;
+    clip-path: none;
+    inline-size: auto;
+    margin: 0;
+    overflow: visible;
+    padding: var(--space-sm) var(--space-md);
+    white-space: normal;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .button:hover,
+    button:not([class]):hover,
+    [data-action]:hover {
+      transform: none;
+    }
+  }
+}

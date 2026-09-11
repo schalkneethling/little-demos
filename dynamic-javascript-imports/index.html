@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Import Based on DOM State</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+        --page-bg: #f6f1e8;
+        --card-bg: #fffdf9;
+        --border: #d8c9ae;
+        --accent: #215c4f;
+        --accent-soft: #dfeee9;
+        --text: #1f2a2a;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 2rem;
+        background:
+          radial-gradient(circle at top left, #fffdf7 0, transparent 28%),
+          linear-gradient(180deg, #f4eee3 0%, var(--page-bg) 100%);
+        color: var(--text);
+      }
+
+      main {
+        max-width: 70rem;
+        margin: 0 auto;
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: clamp(2rem, 4vw, 3rem);
+      }
+
+      p {
+        max-width: 60ch;
+      }
+
+      cards-slider {
+        display: grid;
+        gap: 0.75rem;
+        margin-block: 2rem;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        background: rgba(255, 253, 249, 0.88);
+        box-shadow: 0 0.75rem 2rem rgba(33, 92, 79, 0.08);
+      }
+
+      cards-slider header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      cards-slider h2 {
+        margin: 0;
+        font-size: 1.15rem;
+      }
+
+      .slider-navigation {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .slider-navigation button {
+        border: 0;
+        border-radius: 999px;
+        padding: 0.65rem 0.9rem;
+        background: var(--accent);
+        color: white;
+        cursor: pointer;
+      }
+
+      .cards-track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(15rem, 22rem);
+        gap: 1rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        scroll-snap-type: x proximity;
+        scrollbar-width: thin;
+      }
+
+      .card {
+        min-height: 10rem;
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 0.9rem;
+        background: linear-gradient(180deg, var(--card-bg), var(--accent-soft));
+        scroll-snap-align: start;
+      }
+
+      code {
+        background: rgba(33, 92, 79, 0.08);
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Dynamic JavaScript Import Based on DOM State</h1>
+      <p>
+        The first slider opts into navigation with
+        <code>data-show-navigation</code>, so it loads an extra module for button behavior. The
+        second slider leaves that attribute off, so no navigation module is requested at all.
+      </p>
+
+      <cards-slider data-show-navigation>
+        <header>
+          <h2>Slider with optional navigation enabled</h2>
+          <div class="slider-navigation">
+            <button type="button" data-action="previous">Previous</button>
+            <button type="button" data-action="next">Next</button>
+          </div>
+        </header>
+        <div class="cards-track">
+          <article class="card">Alpha card</article>
+          <article class="card">Bravo card</article>
+          <article class="card">Charlie card</article>
+          <article class="card">Delta card</article>
+          <article class="card">Echo card</article>
+        </div>
+      </cards-slider>
+
+      <cards-slider>
+        <header>
+          <h2>Slider without navigation</h2>
+        </header>
+        <div class="cards-track">
+          <article class="card">One</article>
+          <article class="card">Two</article>
+          <article class="card">Three</article>
+          <article class="card">Four</article>
+          <article class="card">Five</article>
+        </div>
+      </cards-slider>
+    </main>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
