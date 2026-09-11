@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "algorithm": "speckle-v1",
+  "baseColor": "#6d9a83",
+  "fleckColors": ["#739d87", "#67927c"],
+  "fleckCount": 48,
+  "minRadius": 1,
+  "maxRadius": 2
+}
