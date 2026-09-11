@@ -176,3 +176,13 @@ Runtime code and CI security/environment settings are unchanged by this correcti
 All five corrected comparisons passed without updates on Linux (19.0 seconds) and
 macOS (17.4 seconds), and all ten images passed independent visual review. Formatting,
 lint and type checks also passed after the test-only change.
+
+The next hosted run passed 48 of 49 tests. Its only remaining difference was 336
+pixels in the visited caption: the Unicode checkmark selected a platform-dependent
+fallback font and shifted the following word. The visited-state unit expectation
+was changed first and observed failing, then the redundant symbol was removed.
+The visible `Visited` text and state outline continue to communicate status without
+color dependence. This is a small production adjustment from the direction's
+proposed check-shaped badge; a future icon should be drawn rather than font-backed.
+All 101 unit tests, static checks and the production build passed afterward; only
+the two visited-exit baselines require regeneration for this change.

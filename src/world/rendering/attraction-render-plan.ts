@@ -119,7 +119,8 @@ export function getAttractionVisualState(
     fillColor: state.selected ? plan.highlightColor : plan.baseColor,
     strokeColor: state.selected ? (state.highContrast ? 0xffffff : 0xffe269) : 0x25362d,
     strokeWidth: state.selected ? 9 : state.visited ? 6 : 4,
-    label: state.visited ? `${plan.label}\n✓ Visited` : plan.label,
+    // Explicit text conveys state without a platform-dependent symbol font.
+    label: state.visited ? `${plan.label}\nVisited` : plan.label,
     showInteractionMarker: plan.interactive && state.selected,
   };
 }
