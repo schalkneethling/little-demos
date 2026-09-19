@@ -30,7 +30,6 @@ import {
   createAttractionRenderPlan,
   getAttractionVisualState,
   getInteractionMarkerPosition,
-  getAttractionCaptionPosition,
   type AttractionRenderPlan,
 } from "../rendering/attraction-render-plan";
 import { getCameraFollowLerp, getVoidSafeCameraZoom } from "../systems/camera-system";
@@ -55,7 +54,6 @@ interface AttractionVisual {
   artwork: Phaser.GameObjects.Image | null;
   glow: Phaser.GameObjects.Image | null;
   glowKeys: { warm: string; contrast: string } | null;
-  label: Phaser.GameObjects.Text;
   interactionMarker: Phaser.GameObjects.Container | null;
   visited: boolean;
 }
@@ -164,21 +162,6 @@ export function createFairgroundScene({
               .setDepth(plan.structureDepth + 0.005);
         placeholder?.setStrokeStyle(4, 0x25362d);
 
-        const captionPosition = getAttractionCaptionPosition(plan);
-        const label = this.add
-          .text(captionPosition.x, captionPosition.y, plan.label, {
-            align: art ? "left" : "center",
-            color: art ? "#173449" : "#ffffff",
-            fontFamily: "sans-serif",
-            fontSize: art ? "14px" : "22px",
-            fontStyle: "bold",
-            ...(art
-              ? { stroke: "#fff8e6", strokeThickness: 3, wordWrap: { width: 220 }, lineSpacing: 2 }
-              : {}),
-          })
-          .setOrigin(art ? 0 : 0.5)
-          .setDepth(plan.labelDepth);
-
         for (const shape of plan.collisionShapes) {
           const collisionBody = this.add
             .rectangle(
@@ -237,7 +220,6 @@ export function createFairgroundScene({
           artwork,
           glow,
           glowKeys,
-          label,
           interactionMarker,
           visited: false,
         });
@@ -516,7 +498,6 @@ export function createFairgroundScene({
               : art.key,
           );
         }
-        visual.label.setText(state.label);
         visual.interactionMarker?.setVisible(state.showInteractionMarker);
       }
     }
