@@ -29,6 +29,16 @@ export const DEFAULT_ASSET_BUDGETS = {
   worldFiles: 40,
 } as const;
 
+// Phase 4's single-area proof remains the default for isolated export callers.
+// The production CLI now exports the complete Phase 5 initial fairground, using
+// the existing initial-world limits rather than widening the resident budget.
+export const INITIAL_FAIRGROUND_ASSET_BUDGETS = {
+  ...DEFAULT_ASSET_BUDGETS,
+  proofTransferBytes: DEFAULT_ASSET_BUDGETS.initialTransferBytes,
+  proofDecodedBytes: DEFAULT_ASSET_BUDGETS.initialDecodedBytes,
+  proofFiles: DEFAULT_ASSET_BUDGETS.initialFiles,
+} as const;
+
 type AssetBudgets = { [Key in keyof typeof DEFAULT_ASSET_BUDGETS]: number };
 type LoadGroup = "initial-world" | "deferred-world";
 type Gravity = "center" | "south";
@@ -885,7 +895,11 @@ async function runCli() {
   const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
   const check = process.argv.slice(2).includes("--check");
   const started = performance.now();
-  const manifest = await exportAssetInventory({ rootDir, check });
+  const manifest = await exportAssetInventory({
+    rootDir,
+    check,
+    budgets: INITIAL_FAIRGROUND_ASSET_BUDGETS,
+  });
   const durationMs = Math.round(performance.now() - started);
   const verb = check ? "Validated" : "Exported";
   process.stdout.write(

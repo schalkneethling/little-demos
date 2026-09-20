@@ -2,6 +2,58 @@
   "version": 1,
   "assets": [
     {
+      "key": "attraction/carousel/base",
+      "kind": "transparent-raster",
+      "sourcePath": "art/source/carousel-v1.png",
+      "runtimePath": "src/assets/runtime/attraction/carousel/carousel.png",
+      "sourceRect": { "x": 0, "y": 0, "width": 1312, "height": 1199 },
+      "output": { "width": 280, "height": 280 },
+      "contentBox": { "x": 2, "y": 2, "width": 276, "height": 276, "gravity": "south" },
+      "anchor": { "x": 140, "y": 280 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 250, "height": 230, "color": "#e5b74c" }
+    },
+    {
+      "key": "attraction/tent/base",
+      "kind": "transparent-raster",
+      "sourcePath": "art/source/tent-v1.png",
+      "runtimePath": "src/assets/runtime/attraction/tent/tent.png",
+      "sourceRect": { "x": 0, "y": 0, "width": 1301, "height": 1209 },
+      "output": { "width": 300, "height": 280 },
+      "contentBox": { "x": 2, "y": 2, "width": 296, "height": 276, "gravity": "south" },
+      "anchor": { "x": 150, "y": 280 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 300, "height": 190, "color": "#bb4d42" }
+    },
+    {
+      "key": "attraction/ferris-wheel/base",
+      "kind": "transparent-raster",
+      "sourcePath": "art/source/ferris-wheel-v1.png",
+      "runtimePath": "src/assets/runtime/attraction/ferris-wheel/ferris-wheel.png",
+      "sourceRect": { "x": 0, "y": 0, "width": 1173, "height": 1341 },
+      "output": { "width": 280, "height": 320 },
+      "contentBox": { "x": 2, "y": 2, "width": 276, "height": 316, "gravity": "south" },
+      "anchor": { "x": 140, "y": 320 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 250, "height": 230, "color": "#31777a" }
+    },
+    {
+      "key": "attraction/fountain/base",
+      "kind": "transparent-raster",
+      "sourcePath": "art/source/fountain-v1.png",
+      "runtimePath": "src/assets/runtime/attraction/fountain/fountain.png",
+      "sourceRect": { "x": 0, "y": 0, "width": 1396, "height": 1127 },
+      "output": { "width": 350, "height": 300 },
+      "contentBox": { "x": 2, "y": 2, "width": 346, "height": 296, "gravity": "south" },
+      "anchor": { "x": 175, "y": 300 },
+      "loadGroup": "initial-world",
+      "dependsOn": [],
+      "fallback": { "width": 350, "height": 340, "color": "#6d9a83" }
+    },
+    {
       "key": "attraction/arcade/base",
       "kind": "transparent-raster",
       "sourcePath": "art/source/arcade-three-quarter-v2.png",

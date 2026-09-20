@@ -5,11 +5,25 @@ import sharp from "sharp";
 import { afterEach, describe, expect, test } from "vite-plus/test";
 import {
   DEFAULT_ASSET_BUDGETS,
+  INITIAL_FAIRGROUND_ASSET_BUDGETS,
   exportAssetInventory,
   readFileBounded,
 } from "../../scripts/assets/export-assets";
 
 const temporaryRoots: string[] = [];
+
+test("the full fairground export uses existing initial-world limits, not resident limits", () => {
+  expect(INITIAL_FAIRGROUND_ASSET_BUDGETS.proofTransferBytes).toBe(
+    DEFAULT_ASSET_BUDGETS.initialTransferBytes,
+  );
+  expect(INITIAL_FAIRGROUND_ASSET_BUDGETS.proofDecodedBytes).toBe(
+    DEFAULT_ASSET_BUDGETS.initialDecodedBytes,
+  );
+  expect(INITIAL_FAIRGROUND_ASSET_BUDGETS.proofFiles).toBe(DEFAULT_ASSET_BUDGETS.initialFiles);
+  expect(INITIAL_FAIRGROUND_ASSET_BUDGETS.worldTransferBytes).toBe(
+    DEFAULT_ASSET_BUDGETS.worldTransferBytes,
+  );
+});
 
 afterEach(async () => {
   await Promise.all(temporaryRoots.splice(0).map((root) => rm(root, { recursive: true })));
