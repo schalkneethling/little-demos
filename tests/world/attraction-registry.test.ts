@@ -4,8 +4,8 @@ import { validateAttractionGeometry as validateAttractionRegistry } from "../../
 import { FAIRGROUND_MAP } from "../../src/world/map/fairground-map.ts";
 
 describe("attraction registry", () => {
-  test("defines all grey-box structures in the shared registry", () => {
-    expect(ATTRACTIONS).toHaveLength(5);
+  test("defines six destinations, a coming-soon plot and a landmark", () => {
+    expect(ATTRACTIONS).toHaveLength(8);
     expect(ATTRACTIONS[0]).toMatchObject({
       id: "arcade",
       demoId: "dynamic-javascript-imports",

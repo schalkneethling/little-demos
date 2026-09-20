@@ -205,7 +205,7 @@ for (const reducedMotion of [false, true]) {
         { timeout: 20_000 },
       )
       .toBeLessThan(900);
-    await expect(prompt).toBeVisible({ timeout: 20_000 });
+    await expect(prompt).toContainText("Dynamic JavaScript Imports", { timeout: 20_000 });
     await page.keyboard.up("ArrowLeft");
     await expect(dialog).not.toBeVisible();
     await page.keyboard.press("Enter");
