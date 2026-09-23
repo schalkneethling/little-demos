@@ -140,6 +140,7 @@ test("the mounted property demo applies live motion changes without losing its i
 test("enabling system reduction during an attraction exit settles it once and restores controls", async ({
   page,
 }) => {
+  await page.clock.install({ time: new Date("2026-01-01T00:00:00Z") });
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/?debug-world");
   await page.locator("[data-demo-directory] summary").click();
@@ -147,25 +148,29 @@ test("enabling system reduction during an attraction exit settles it once and re
   await expect(page.locator("[data-debug-position]")).toHaveText("x 960, y 305");
   await page.keyboard.press("Enter");
   await expect(page.locator("[data-demo-title]")).toHaveText("Property Transitions");
+  await expect(page.locator("[data-demo-status]")).toHaveText("Demo ready.");
+  await page.clock.pauseAt(new Date("2026-01-01T01:00:00Z"));
 
   await page.getByRole("button", { name: "Close demo", exact: true }).click();
+  await expect(page.locator("[data-demo-dialog]")).not.toBeVisible();
+  await page.clock.runFor(150);
   const position = page.locator("[data-debug-position]");
-  await expect
-    .poll(
-      async () => {
-        const y = Number((await position.textContent())?.match(/y (\d+)/)?.[1]);
-        return y > 305 && y < 405;
-      },
-      { intervals: [10, 20, 50] },
-    )
-    .toBe(true);
+  const art = page.locator("[data-world-canvas]");
+  // Frame diagnostics are unthrottled; the text position updates only periodically.
+  const midExitY = Number(await art.getAttribute("data-player-y"));
+  expect(midExitY).toBeGreaterThan(305);
+  expect(midExitY).toBeLessThan(405);
   await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.clock.runFor(16);
+  await expect(art).toHaveAttribute("data-player-y", "405");
+  await page.clock.runFor(1_000);
 
   await expect(page.locator("[data-demo-dialog]")).not.toBeVisible();
   await expect(page.locator("[data-world-control]")).toBeFocused();
   await expect(position).toHaveText("x 960, y 405");
   await page.keyboard.down("ArrowDown");
   try {
+    await page.clock.runFor(200);
     await expect
       .poll(async () => Number((await position.textContent())?.match(/y (\d+)/)?.[1]))
       .toBeGreaterThan(405);
