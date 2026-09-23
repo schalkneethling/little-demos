@@ -171,9 +171,7 @@ test("enabling system reduction during an attraction exit settles it once and re
   await page.keyboard.down("ArrowDown");
   try {
     await page.clock.runFor(200);
-    await expect
-      .poll(async () => Number((await position.textContent())?.match(/y (\d+)/)?.[1]))
-      .toBeGreaterThan(405);
+    expect(Number(await art.getAttribute("data-player-y"))).toBeGreaterThan(405);
   } finally {
     await page.keyboard.up("ArrowDown");
   }
