@@ -38,7 +38,8 @@ by the implementation plan and subsequent visual approvals.
   through a throttled text diagnostic. The test now pauses Playwright's clock,
   advances 150 ms, verifies a genuine intermediate position using frame diagnostics,
   enables reduction, then checks settlement and continued movement. Focused Linux
-  rerun passed. Final complete rerun is pending.
+  rerun passed. Final complete rerun: **68 passed in 9.6 minutes**, retries disabled,
+  using `DOCKER_BIN=/Applications/Docker.app/Contents/Resources/bin/docker vp run test:e2e --retries=0`.
 - Chrome computer-use checks: desktop controls, 320px motion override/reset, preserved
   reset focus, prototype drag/pan and garden composition. No manual screen-reader result
   or exhaustive device/performance claim is made at this checkpoint.
@@ -50,7 +51,8 @@ were weakened.
 ## Deferred by design
 
 Production rectangular terrain and arbitrary planter pairing remain in
-`src/world/scenes/fairground-scene.ts` and
-`src/world/rendering/fairground-decoration.ts`; PRs 2–3 replace them after spatial approval.
-The existing coming-soon badge remains until PR 4 supplies its semantic replacement.
+`src/world/scenes/fairground-scene.ts:122` and
+`src/world/rendering/fairground-decoration.ts:20`; PRs 2–3 replace them after spatial approval.
+The existing coming-soon badge at `src/world/scenes/fairground-scene.ts:259` remains until
+PR 4 supplies its semantic replacement.
 Animation PRs remain blocked on their individual visual proof gates.
