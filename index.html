@@ -24,7 +24,6 @@
         </div>
 
         <header class="site-header" data-site-header>
-          <p class="eyebrow" data-eyebrow>Step right up</p>
           <h1>Little Demos</h1>
           <p class="intro" data-intro>A strollable collection of tiny web experiments.</p>
         </header>
@@ -53,6 +52,10 @@
               <input data-reduced-motion type="checkbox" />
               Reduce fairground motion
             </label>
+            <p id="motion-explanation" data-motion-explanation hidden>
+              Your system setting requires reduced motion.
+            </p>
+            <button data-use-system-motion type="button" hidden>Use system setting</button>
             <p class="world-status" data-world-status role="status" aria-live="polite">
               Preparing the fairground…
             </p>

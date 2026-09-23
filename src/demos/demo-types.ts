@@ -1,6 +1,8 @@
 export interface DemoContext {
   signal: AbortSignal;
   reducedMotion: boolean;
+  /** Subscribes for the session lifetime and immediately receives the latest value. */
+  onReducedMotionChange(listener: (reducedMotion: boolean) => void): () => void;
   announce(message: string): void;
 }
 

@@ -3,7 +3,7 @@ import type { WorldBridge } from "../world/bridge/world-events";
 import { createDemoController } from "../ui/demo-controller";
 import { CATALOG } from "../catalog/catalog";
 import { findAvailableDemoForAttraction } from "../ui/demo-directory";
-import { readMotionOverride, writeMotionOverride } from "./motion-preference";
+import { clearMotionOverride, readMotionOverride, writeMotionOverride } from "./motion-preference";
 import { createCameraControls } from "../ui/camera-controls";
 
 interface AppElements {
@@ -27,20 +27,19 @@ const movementKeys = new Set([
 ]);
 
 export function createAppController(elements: AppElements, bridge: WorldBridge) {
+  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
   let motionOverride: boolean | null = null;
   try {
     motionOverride = readMotionOverride(window.localStorage);
   } catch {
     /* Storage may be disabled. */
   }
-  let state: AppState = createInitialAppState(
-    motionOverride ?? window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-  );
+  let state: AppState = createInitialAppState(media.matches || motionOverride === true);
   const motion = document.querySelector<HTMLInputElement>("[data-reduced-motion]");
+  const motionExplanation = document.querySelector<HTMLElement>("[data-motion-explanation]");
+  const useSystemMotion = document.querySelector<HTMLButtonElement>("[data-use-system-motion]");
   const controlDeck = document.querySelector<HTMLDetailsElement>("[data-control-deck]");
   const prompt = document.querySelector<HTMLElement>("[data-attraction-prompt]");
-  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (motion) motion.checked = state.settings.reducedMotion;
   const demoController = createDemoController({
     bridge,
     worldControl: elements.worldControl,
@@ -186,20 +185,54 @@ export function createAppController(elements: AppElements, bridge: WorldBridge) 
   };
   const applyMotion = (reducedMotion: boolean) => {
     state = { ...state, settings: { ...state.settings, reducedMotion } };
-    if (motion) motion.checked = reducedMotion;
     bridge.command({ type: "apply-settings", settings: state.settings });
+    demoController.setReducedMotion(reducedMotion);
+  };
+  const renderMotionControls = () => {
+    if (motion) {
+      motion.checked = media.matches || motionOverride === true;
+      motion.disabled = media.matches;
+      if (media.matches) motion.setAttribute("aria-describedby", "motion-explanation");
+      else motion.removeAttribute("aria-describedby");
+    }
+    if (motionExplanation) motionExplanation.hidden = !media.matches;
+    if (useSystemMotion) useSystemMotion.hidden = motionOverride === null;
+  };
+  const applyEffectiveMotion = () => {
+    renderMotionControls();
+    applyMotion(media.matches || motionOverride === true);
   };
   const handleMotion = () => {
-    motionOverride = motion?.checked ?? media.matches;
-    try {
-      writeMotionOverride(window.localStorage, motionOverride);
-    } catch {
-      /* Preserve the session override if storage is disabled. */
+    if (motion?.checked) {
+      motionOverride = true;
+      try {
+        writeMotionOverride(window.localStorage);
+      } catch {
+        /* Preserve the session override if storage itself is unavailable. */
+      }
+    } else {
+      motionOverride = null;
+      try {
+        clearMotionOverride(window.localStorage);
+      } catch {
+        /* Clearing the session override still takes effect. */
+      }
     }
-    applyMotion(motionOverride);
+    applyEffectiveMotion();
   };
   const handleSystemMotion = () => {
-    if (motionOverride === null) applyMotion(media.matches);
+    applyEffectiveMotion();
+  };
+  const handleUseSystemMotion = () => {
+    motionOverride = null;
+    try {
+      clearMotionOverride(window.localStorage);
+    } catch {
+      /* Clearing the session override still takes effect. */
+    }
+    applyEffectiveMotion();
+    if (motion && !motion.disabled) motion.focus();
+    else controlDeck?.querySelector<HTMLElement>("summary")?.focus();
   };
   const handlePrompt = (event: Event) => {
     if (
@@ -226,9 +259,11 @@ export function createAppController(elements: AppElements, bridge: WorldBridge) 
   elements.worldControl.addEventListener("keydown", handleKeyDown);
   document.addEventListener("visibilitychange", handleVisibilityChange);
   motion?.addEventListener("change", handleMotion);
+  useSystemMotion?.addEventListener("click", handleUseSystemMotion);
   media.addEventListener("change", handleSystemMotion);
   browse?.addEventListener("click", handleBrowse);
   prompt?.addEventListener("click", handlePrompt);
+  renderMotionControls();
 
   return {
     getState: () => state,
@@ -242,6 +277,7 @@ export function createAppController(elements: AppElements, bridge: WorldBridge) 
       elements.worldControl.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       motion?.removeEventListener("change", handleMotion);
+      useSystemMotion?.removeEventListener("click", handleUseSystemMotion);
       media.removeEventListener("change", handleSystemMotion);
       browse?.removeEventListener("click", handleBrowse);
       prompt?.removeEventListener("click", handlePrompt);

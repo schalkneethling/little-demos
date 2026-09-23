@@ -14,6 +14,9 @@ export function createDemo(): DemoModule {
     mount(container, context) {
       host = document.createElement("div");
       host.toggleAttribute("data-reduced-motion", context.reducedMotion);
+      context.onReducedMotionChange((reducedMotion) => {
+        host?.toggleAttribute("data-reduced-motion", reducedMotion);
+      });
       container.append(host);
       const root = host.attachShadow({ mode: "open" });
       root.innerHTML = `

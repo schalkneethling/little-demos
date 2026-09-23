@@ -8,6 +8,8 @@ export function createDemoSession(
   reducedMotion = false,
 ) {
   let generation = 0;
+  let currentReducedMotion = reducedMotion;
+  const motionListeners = new Set<(reducedMotion: boolean) => void>();
   let active: { controller: AbortController; module?: DemoModule } | undefined;
 
   const close = async () => {
@@ -15,6 +17,7 @@ export function createDemoSession(
     const previous = active;
     active = undefined;
     previous?.controller.abort();
+    motionListeners.clear();
     await previous?.module?.unmount?.();
   };
 
@@ -34,7 +37,13 @@ export function createDemoSession(
         entry.module = module;
         await module.mount(container, {
           signal: entry.controller.signal,
-          reducedMotion,
+          reducedMotion: currentReducedMotion,
+          onReducedMotionChange(listener) {
+            if (current !== generation || entry.controller.signal.aborted) return () => {};
+            motionListeners.add(listener);
+            listener(currentReducedMotion);
+            return () => motionListeners.delete(listener);
+          },
           announce: (message) => {
             if (current === generation) announce(message);
           },
@@ -45,6 +54,11 @@ export function createDemoSession(
         await close();
         throw entry.module ? error : new DemoImportError(error);
       }
+    },
+    setReducedMotion(nextReducedMotion: boolean) {
+      if (nextReducedMotion === currentReducedMotion) return;
+      currentReducedMotion = nextReducedMotion;
+      for (const listener of motionListeners) listener(nextReducedMotion);
     },
     close,
   };
