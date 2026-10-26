@@ -71,7 +71,7 @@ describe("attraction render planning", () => {
       fillColor: 0xabcdef,
       strokeColor: 0xffffff,
       strokeWidth: 9,
-      label: "Temporary ride\n✓ Visited",
+      label: "Temporary ride\nVisited",
       showInteractionMarker: true,
     });
 

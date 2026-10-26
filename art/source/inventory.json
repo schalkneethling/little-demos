@@ -4,9 +4,9 @@
     {
       "key": "attraction/arcade/base",
       "kind": "transparent-raster",
-      "sourcePath": "art/source/arcade.png",
+      "sourcePath": "art/source/arcade-three-quarter-v2.png",
       "runtimePath": "src/assets/runtime/attraction/arcade/base.png",
-      "sourceRect": { "x": 76, "y": 75, "width": 1101, "height": 1059 },
+      "sourceRect": { "x": 145, "y": 18, "width": 1245, "height": 997 },
       "output": { "width": 320, "height": 310 },
       "contentBox": { "x": 2, "y": 2, "width": 316, "height": 306, "gravity": "south" },
       "anchor": { "x": 160, "y": 310 },
@@ -54,15 +54,15 @@
     {
       "key": "prop/planter",
       "kind": "transparent-raster",
-      "sourcePath": "art/source/planter.png",
+      "sourcePath": "art/source/planter-three-quarter-v2.png",
       "runtimePath": "src/assets/runtime/prop/planter.png",
-      "sourceRect": { "x": 299, "y": 246, "width": 657, "height": 772 },
-      "output": { "width": 28, "height": 28 },
-      "contentBox": { "x": 1, "y": 1, "width": 26, "height": 26, "gravity": "south" },
-      "anchor": { "x": 14, "y": 28 },
+      "sourceRect": { "x": 243, "y": 111, "width": 780, "height": 1035 },
+      "output": { "width": 48, "height": 56 },
+      "contentBox": { "x": 2, "y": 2, "width": 44, "height": 52, "gravity": "south" },
+      "anchor": { "x": 24, "y": 56 },
       "loadGroup": "initial-world",
       "dependsOn": [],
-      "fallback": { "width": 28, "height": 28, "color": "#31777a" }
+      "fallback": { "width": 48, "height": 56, "color": "#31777a" }
     },
     {
       "key": "surface/ground/grass-a",
