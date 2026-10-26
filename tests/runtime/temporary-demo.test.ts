@@ -6,6 +6,7 @@ import { createDemoSession } from "../../src/demos/demo-session";
 import { withTemporaryDemo } from "../helpers/temporary-demo";
 import { createAttractionRenderPlan } from "../../src/world/rendering/attraction-render-plan";
 import { selectNearestAttraction } from "../../src/world/attractions/attraction-controller";
+import { PLAYER_GROUND_OFFSET_Y } from "../../src/world/player/player-geometry";
 
 test("temporary demos use the normal directory and lifecycle without mutating the real catalog", async () => {
   const mount = vi.fn();
@@ -61,12 +62,12 @@ test("a new attraction needs only catalog definitions for rendering, selection a
       shortDescription: "Fixture",
       category: "Tests",
       status: "available",
-      position: { x: 600, y: 900 },
-      entrancePosition: { x: 650, y: 1040 },
-      interactionZone: { x: 600, y: 1000, width: 100, height: 100 },
-      collisionShapes: [{ type: "rectangle", x: 600, y: 900, width: 100, height: 80 }],
+      position: { x: 50, y: 800 },
+      entrancePosition: { x: 100, y: 900 },
+      interactionZone: { x: 50, y: 880, width: 100, height: 100 },
+      collisionShapes: [{ type: "rectangle", x: 50, y: 800, width: 100, height: 80 }],
       assetKey: "temporary-placeholder",
-      sortAnchor: { x: 650, y: 980 },
+      sortAnchor: { x: 100, y: 880 },
     },
   });
   const plans = createAttractionRenderPlan(
@@ -76,7 +77,12 @@ test("a new attraction needs only catalog definitions for rendering, selection a
   expect(plans.find((plan) => plan.id === "temporary-attraction")).toMatchObject({
     interactive: true,
   });
-  expect(selectNearestAttraction(catalog.attractions, { x: 650, y: 1040 })?.demoId).toBe(demo.id);
+  expect(
+    selectNearestAttraction(catalog.attractions, {
+      x: 100,
+      y: 900 + PLAYER_GROUND_OFFSET_Y,
+    })?.demoId,
+  ).toBe(demo.id);
   expect(createDirectoryEntries(catalog.demos, catalog.attractions)).toContainEqual(
     expect.objectContaining({ id: demo.id, canOpen: true, canLocate: true }),
   );

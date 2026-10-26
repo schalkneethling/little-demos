@@ -26,32 +26,36 @@ function changeArcade(patch: Partial<AttractionDefinition>) {
 describe("catalog validation", () => {
   test("the production catalog validates and every structure has a presentation asset", () => {
     expect(validateCatalog(CATALOG, FAIRGROUND_MAP)).toEqual([]);
-    expect(CATALOG.attractions).toHaveLength(5);
+    expect(CATALOG.attractions).toHaveLength(8);
+    expect(CATALOG.attractions.filter(({ status }) => status === "available")).toHaveLength(6);
     expect(CATALOG.demos.find((demo) => demo.id === "funhouse")).toMatchObject({
       status: "coming-soon",
       attractionId: "funhouse",
     });
     expect(CATALOG.demos.find((demo) => demo.id === "zipper")).toMatchObject({
       status: "available",
-      attractionId: null,
+      attractionId: "ferris-wheel",
     });
   });
 
   test("rejects duplicate attraction, demo and asset IDs", () => {
     const catalog = fixture();
+    const duplicateAttraction = catalog.attractions[0]!;
+    const duplicateDemo = catalog.demos[0]!;
+    const duplicateAsset = catalog.assets[0]!;
     const errors = validateCatalog(
       {
-        attractions: [...catalog.attractions, catalog.attractions[0]!],
-        demos: [...catalog.demos, catalog.demos[0]!],
-        assets: [...catalog.assets, catalog.assets[0]!],
+        attractions: [...catalog.attractions, duplicateAttraction],
+        demos: [...catalog.demos, duplicateDemo],
+        assets: [...catalog.assets, duplicateAsset],
       },
       FAIRGROUND_MAP,
     );
     expect(errors).toEqual(
       expect.arrayContaining([
-        "Duplicate attraction id: arcade",
-        "Duplicate demo id: dynamic-javascript-imports",
-        "Duplicate asset key: arcade-placeholder",
+        `Duplicate attraction id: ${duplicateAttraction.id}`,
+        `Duplicate demo id: ${duplicateDemo.id}`,
+        `Duplicate asset key: ${duplicateAsset.key}`,
       ]),
     );
   });
