@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fluid Type — a clamp() playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=IBM+Plex+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <meta
+      name="description"
+      content="A hands-on CSS clamp() playground for crafting fluid typography. Dial in your min/max font sizes and viewport widths, visualise the scale curve, and copy the ready-to-use clamp() value."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Fluid Type — a clamp() playground" />
+    <meta
+      property="og:description"
+      content="A hands-on CSS clamp() playground for crafting fluid typography. Dial in your min/max font sizes and viewport widths, visualise the scale curve, and copy the ready-to-use clamp() value."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="fluidtype-social-share.png" />
+    <meta property="og:image:alt" content="Fluid Type — a clamp() playground" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Fluid Type — a clamp() playground" />
+    <meta
+      name="twitter:description"
+      content="A hands-on CSS clamp() playground for crafting fluid typography. Dial in your min/max font sizes and viewport widths, visualise the scale curve, and copy the ready-to-use clamp() value."
+    />
+    <meta name="twitter:image" content="fluidtype-social-share.png" />
+    <meta name="twitter:image:alt" content="Fluid Type — a clamp() playground" />
+
+    <link rel="icon" type="image/png" href="favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="FluidType" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link href="css/index.css" rel="stylesheet" type="text/css" media="screen" />
+  </head>
+  <body>
+    <div class="grain"></div>
+
+    <div class="layout">
+      <header class="masthead">
+        <h1 class="masthead-title">Fluid <em>type</em></h1>
+        <div class="masthead-meta">
+          <span class="line">A <span class="accent">clamp()</span> playground</span>
+          <span class="line">Est. Apr 2026 · No. 01</span>
+        </div>
+        <p class="masthead-tagline">
+          A hands-on tool for understanding <em>y = mx + b</em> inside CSS. Adjust the input and see
+          the output change live.
+          <a
+            href="https://schalkneethling.com/posts/the-day-css-made-me-learn-algebra-and-i-liked-it/"
+            >Read the accompanying article</a
+          >.
+        </p>
+      </header>
+
+      <div class="workbench">
+        <!-- ===== LEFT: INPUTS ===== -->
+        <aside class="panel">
+          <div class="panel-label">
+            <span><span class="num">01</span>&nbsp;&nbsp;Inputs</span>
+          </div>
+
+          <!-- MIN -->
+          <div class="input-group">
+            <div class="input-header">
+              <label class="input-label" for="min-input">
+                <span class="symbol">MIN</span>
+                <span>font floor</span>
+              </label>
+              <span class="input-value"><span id="min-display">1.45</span> rem</span>
+            </div>
+            <input
+              type="range"
+              id="min-input"
+              class="input-slider"
+              min="0.75"
+              max="2.5"
+              step="0.0625"
+              value="1.45"
+            />
+            <div class="input-range"><span>0.75rem</span><span>2.5rem</span></div>
+          </div>
+
+          <!-- MAX -->
+          <div class="input-group">
+            <div class="input-header">
+              <label class="input-label" for="max-input">
+                <span class="symbol">MAX</span>
+                <span>font ceiling</span>
+              </label>
+              <span class="input-value"><span id="max-display">2.25</span> rem</span>
+            </div>
+            <input
+              type="range"
+              id="max-input"
+              class="input-slider"
+              min="1"
+              max="4"
+              step="0.0625"
+              value="2.25"
+            />
+            <div class="input-range"><span>1rem</span><span>4rem</span></div>
+          </div>
+
+          <!-- W1 -->
+          <div class="input-group">
+            <div class="input-header">
+              <label class="input-label" for="w1-input">
+                <span class="symbol">W₁</span>
+                <span>smallest container</span>
+              </label>
+              <span class="input-value"><span id="w1-display">252</span> px</span>
+            </div>
+            <input
+              type="range"
+              id="w1-input"
+              class="input-slider"
+              min="100"
+              max="800"
+              step="1"
+              value="252"
+            />
+            <div class="input-range"><span>100px</span><span>800px</span></div>
+          </div>
+
+          <!-- W2 -->
+          <div class="input-group">
+            <div class="input-header">
+              <label class="input-label" for="w2-input">
+                <span class="symbol">W₂</span>
+                <span>largest container</span>
+              </label>
+              <span class="input-value"><span id="w2-display">432</span> px</span>
+            </div>
+            <input
+              type="range"
+              id="w2-input"
+              class="input-slider"
+              min="200"
+              max="1600"
+              step="1"
+              value="432"
+            />
+            <div class="input-range"><span>200px</span><span>1600px</span></div>
+          </div>
+
+          <div class="warn" id="warn">W₂ must be greater than W₁ for a valid line.</div>
+
+          <div class="section-divider"><span>Derived</span></div>
+
+          <div class="results-grid">
+            <div class="result-cell">
+              <div class="result-label"><span>Slope</span><span class="symbol">m</span></div>
+              <div class="result-value" id="slope-display">5.56cqi</div>
+            </div>
+            <div class="result-cell">
+              <div class="result-label"><span>Intercept</span><span class="symbol">b</span></div>
+              <div class="result-value" id="intercept-display">0.750rem</div>
+            </div>
+          </div>
+
+          <div class="section-divider"><span>Output</span></div>
+
+          <div class="code-output" id="code-output">
+            <button class="copy-btn" id="copy-btn">Copy</button>
+            <span class="prop">font-size</span><span class="punc">:</span> <br />&nbsp;&nbsp;<span
+              class="fn"
+              >clamp</span
+            ><span class="punc">(</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="num" id="out-min">1.45rem</span
+            ><span class="punc">,</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="num" id="out-middle">0.75rem + 5.56cqi</span
+            ><span class="punc">,</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="num" id="out-max">2.25rem</span><br />
+            &nbsp;&nbsp;<span class="punc">)</span><span class="punc">;</span>
+          </div>
+
+          <button class="reset-btn" id="reset-btn">Reset to defaults</button>
+        </aside>
+
+        <!-- ===== RIGHT COLUMN ===== -->
+        <div class="right-column">
+          <!-- GRAPH -->
+          <div class="panel graph-wrap">
+            <div class="panel-label">
+              <span><span class="num">02</span>&nbsp;&nbsp;The line</span>
+            </div>
+
+            <div class="graph-header">
+              <h3 class="graph-title">font-size vs. container width</h3>
+              <span class="graph-equation">
+                y&nbsp;=&nbsp;<span class="hi">m</span>·x&nbsp;+&nbsp;<span class="hi">b</span>
+              </span>
+            </div>
+
+            <svg
+              class="graph-svg"
+              id="graph"
+              viewBox="0 0 600 280"
+              preserveAspectRatio="none"
+            ></svg>
+
+            <div class="graph-legend">
+              <span class="legend-item"
+                ><span class="legend-swatch accent"></span>the line (b + m·cqi)</span
+              >
+              <span class="legend-item"
+                ><span class="legend-swatch"></span>clamped (MIN / MAX)</span
+              >
+              <span class="legend-item"
+                ><span class="legend-swatch dashed"></span>W₁ / W₂ crossings</span
+              >
+            </div>
+          </div>
+
+          <!-- LIVE PREVIEW -->
+          <div class="panel preview-wrap">
+            <div class="panel-label">
+              <span><span class="num">03</span>&nbsp;&nbsp;Live preview</span>
+            </div>
+
+            <div class="preview-header">
+              <h3 class="preview-title">drag to resize the container</h3>
+              <span class="preview-width-display">
+                <span id="preview-width">252</span>px → font
+                <span class="font" id="preview-font">23.2px</span>
+              </span>
+            </div>
+
+            <div class="preview-width-control">
+              <div class="preview-markers" id="preview-markers"></div>
+              <div class="preview-slider-wrap">
+                <input
+                  type="range"
+                  id="preview-slider"
+                  class="input-slider"
+                  min="150"
+                  max="1000"
+                  step="1"
+                  value="252"
+                />
+              </div>
+            </div>
+
+            <div class="preview-container-wrap">
+              <div class="preview-container" id="preview-container" style="width: 252px">
+                <div class="preview-text" id="preview-text">
+                  <span class="open-quote">“</span>Hör auf, dich kleiner zu machen, als du
+                  bist.<span class="close-quote">”</span>
+                </div>
+                <div class="preview-byline">— Irgendjemand, irgendwo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== EXPLAINER ===== -->
+      <section class="explainer">
+        <div class="explainer-card">
+          <h4>The Four Knobs</h4>
+          <p>
+            <code>MIN</code> and <code>MAX</code> are floors and ceilings from your design system.
+            <code>W₁</code> and <code>W₂</code> are the container widths at which the line should
+            <em>hit</em> those bounds. Four numbers, one line.
+          </p>
+        </div>
+        <div class="explainer-card">
+          <h4>Why cqi?</h4>
+          <p>
+            <code>1cqi</code> is 1% of the container's inline size. So <code>5.56cqi</code> is
+            really <code>m·x</code> in disguise — the coefficient fused with a runtime lookup. The
+            whole middle expression is <code>b + m·x</code>.
+          </p>
+        </div>
+        <div class="explainer-card">
+          <h4>Tune the W's, not b & m</h4>
+          <p>
+            <code>m</code> and <code>b</code> are <em>derived</em> — only one line passes through
+            two given points. You never tune them directly. You tune <code>W₁</code> and
+            <code>W₂</code> to match your real container widths.
+          </p>
+        </div>
+        <div class="explainer-card">
+          <h4>Diagnose by extreme</h4>
+          <p>
+            <strong>Never reaches MAX?</strong> <code>W₂</code> is too large — no real container is
+            that wide. <strong>Overshoots at small end?</strong> <code>MIN</code> itself is too big
+            for the smallest container.
+          </p>
+        </div>
+      </section>
+
+      <div class="colophon">
+        <span
+          >Set in Fraunces &amp; IBM Plex · <span class="accent">y = mx + b</span> · for CSS</span
+        >
+        <span>Container queries · cqi · clamp()</span>
+      </div>
+    </div>
+
+    <script src="js/main.js" type="module"></script>
+  </body>
+</html>

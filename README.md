@@ -13,13 +13,15 @@ marked coming soon; the remaining landmarks are decorative.
 
 ## Demos
 
-| Demo                                                        | Description                                                                                |
-| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [accent-color](./accent-color/)                             | Theme native form controls and a button with a shared `accent-color` custom property.      |
-| [crisp-edges](./crisp-edges/)                               | Scale pixel art and compare default browser smoothing with `image-rendering: crisp-edges`. |
-| [property-transition](./property-transition/)               | Register custom properties with `@property` so CSS transitions can interpolate them.       |
-| [dynamic-javascript-imports](./dynamic-javascript-imports/) | Load optional slider navigation on demand.                                                 |
-| [zipper](./zipper/)                                         | Compress and decompress local files using browser streams.                                 |
+| Demo                                                          | Description                                                                                |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [accent-color](./accent-color/)                               | Theme native form controls and a button with a shared `accent-color` custom property.      |
+| [crisp-edges](./crisp-edges/)                                 | Scale pixel art and compare default browser smoothing with `image-rendering: crisp-edges`. |
+| [contrast-color-playground](./contrast-color-playground/)     | Explore how `contrast-color()` picks black or white text for any background color.         |
+| [property-transition](./property-transition/)                 | Register custom properties with `@property` so CSS transitions can interpolate them.       |
+| [dynamic-javascript-imports](./dynamic-javascript-imports/)   | Load optional slider navigation on demand.                                                 |
+| [fluid-typography-playground](./fluid-typography-playground/) | Dial in a fluid font size with `clamp()` and see the linear math behind it.                |
+| [zipper](./zipper/)                                           | Compress and decompress local files using browser streams.                                 |
 
 ## Getting started
 
