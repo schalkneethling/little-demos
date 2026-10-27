@@ -24,6 +24,8 @@ export interface AttractionDefinition {
   shortDescription: string;
   category: string;
   position: WorldPoint;
+  /** Optional production-art placement; position retains its legacy top-left meaning. */
+  presentation?: { worldAnchor: WorldPoint };
   entrancePosition: WorldPoint;
   interactionZone: MapRectangle;
   collisionShapes: CollisionShape[];

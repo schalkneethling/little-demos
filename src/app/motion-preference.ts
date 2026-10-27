@@ -11,22 +11,27 @@ export function readMotionOverride(storage: Pick<Storage, "getItem">): boolean |
       "version" in parsed &&
       parsed.version === 1 &&
       "reducedMotion" in parsed &&
-      typeof parsed.reducedMotion === "boolean"
+      parsed.reducedMotion === true
     )
-      return parsed.reducedMotion;
+      return true;
   } catch {
     /* Storage denial leaves system preferences in control. */
   }
   return null;
 }
 
-export function writeMotionOverride(
-  storage: Pick<Storage, "setItem">,
-  reducedMotion: boolean,
-): void {
+export function writeMotionOverride(storage: Pick<Storage, "setItem">): void {
   try {
-    storage.setItem(key, JSON.stringify({ version: 1, reducedMotion }));
+    storage.setItem(key, JSON.stringify({ version: 1, reducedMotion: true }));
   } catch {
     /* An explicit preference still works for this session. */
+  }
+}
+
+export function clearMotionOverride(storage: Pick<Storage, "removeItem">): void {
+  try {
+    storage.removeItem(key);
+  } catch {
+    /* Clearing the session preference still takes effect when storage is denied. */
   }
 }

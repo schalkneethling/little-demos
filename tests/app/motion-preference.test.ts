@@ -1,12 +1,14 @@
 import { describe, expect, test } from "vite-plus/test";
-import { readMotionOverride, writeMotionOverride } from "../../src/app/motion-preference";
+import {
+  clearMotionOverride,
+  readMotionOverride,
+  writeMotionOverride,
+} from "../../src/app/motion-preference";
 
 describe("explicit motion preference", () => {
-  test("restores explicit true and false while rejecting malformed data", () => {
+  test("restores explicit reduction while legacy false follows the system", () => {
     expect(readMotionOverride({ getItem: () => '{"version":1,"reducedMotion":true}' })).toBe(true);
-    expect(readMotionOverride({ getItem: () => '{"version":1,"reducedMotion":false}' })).toBe(
-      false,
-    );
+    expect(readMotionOverride({ getItem: () => '{"version":1,"reducedMotion":false}' })).toBeNull();
     for (const value of [
       null,
       "invalid",
@@ -17,17 +19,21 @@ describe("explicit motion preference", () => {
       expect(readMotionOverride({ getItem: () => value })).toBeNull();
     }
   });
-  test("persists the explicit override and tolerates denied storage", () => {
+  test("persists and clears the explicit override while tolerating denied storage", () => {
     let stored = "";
-    writeMotionOverride(
-      {
-        setItem: (_key, value) => {
-          stored = value;
-        },
+    writeMotionOverride({
+      setItem: (_key, value) => {
+        stored = value;
       },
-      false,
-    );
-    expect(readMotionOverride({ getItem: () => stored })).toBe(false);
+    });
+    expect(readMotionOverride({ getItem: () => stored })).toBe(true);
+    let removed = "";
+    clearMotionOverride({
+      removeItem: (key) => {
+        removed = key;
+      },
+    });
+    expect(removed).toBe("little-demos:motion");
     expect(
       readMotionOverride({
         getItem: () => {
@@ -36,14 +42,18 @@ describe("explicit motion preference", () => {
       }),
     ).toBeNull();
     expect(() =>
-      writeMotionOverride(
-        {
-          setItem: () => {
-            throw new Error("Denied");
-          },
+      writeMotionOverride({
+        setItem: () => {
+          throw new Error("Denied");
         },
-        true,
-      ),
+      }),
+    ).not.toThrow();
+    expect(() =>
+      clearMotionOverride({
+        removeItem: () => {
+          throw new Error("Denied");
+        },
+      }),
     ).not.toThrow();
   });
 });

@@ -8,6 +8,14 @@ import {
 } from "../attractions/attraction-controller";
 import { ATTRACTIONS, getAttractionById } from "../attractions/attraction-registry";
 import { ASSET_BY_KEY } from "../assets/asset-registry";
+import type { AssetLoadStates } from "../assets/asset-loading";
+import { getPlayerArtFrame, type PlayerFacing } from "../rendering/player-art";
+import { getVisualFixture } from "../rendering/visual-fixtures";
+import { createSilhouetteGlow, GLOW_PADDING } from "../rendering/silhouette-glow";
+import {
+  DECORATION_PALETTE,
+  createFairgroundDecorationPlan,
+} from "../rendering/fairground-decoration";
 import type { WorldBridge } from "../bridge/world-events";
 import type { KeyboardInput } from "../input/keyboard-input";
 import { createDiagnosticsThrottle } from "../diagnostics";
@@ -21,9 +29,11 @@ import {
   PLAYER_WIDTH,
 } from "../player/player-geometry";
 import { getMovementVelocity } from "../player/player-movement";
+import { createExitTransition } from "../player/exit-transition";
 import {
   createAttractionRenderPlan,
   getAttractionVisualState,
+  getInteractionMarkerPosition,
   type AttractionRenderPlan,
 } from "../rendering/attraction-render-plan";
 import { getCameraFollowLerp, getVoidSafeCameraZoom } from "../systems/camera-system";
@@ -44,9 +54,12 @@ interface FairgroundSceneDependencies {
 
 interface AttractionVisual {
   plan: AttractionRenderPlan;
-  structure: Phaser.GameObjects.Rectangle;
-  label: Phaser.GameObjects.Text;
+  structure: Phaser.GameObjects.Rectangle | null;
+  artwork: Phaser.GameObjects.Image | null;
+  glow: Phaser.GameObjects.Image | null;
+  glowKeys: { warm: string; contrast: string } | null;
   interactionMarker: Phaser.GameObjects.Container | null;
+  visitedMarker: Phaser.GameObjects.Container | null;
   visited: boolean;
 }
 
@@ -57,9 +70,15 @@ export function createFairgroundScene({
   debug,
 }: FairgroundSceneDependencies) {
   return class FairgroundScene extends Phaser.Scene {
-    #player!: Phaser.GameObjects.Rectangle;
+    #player!: Phaser.GameObjects.Rectangle | Phaser.GameObjects.Sprite;
+    #playerShadow?: Phaser.GameObjects.Ellipse;
+    #playerFacing: PlayerFacing = "south";
+    #playerFrame = 0;
+    #artStates: AssetLoadStates = {};
+    #visualTest = false;
     #controlsActive = false;
     #exiting = false;
+    #activeExit: ReturnType<typeof createExitTransition> | null = null;
     #manualCamera = false;
     #selectedAttractionId: string | null = null;
     #settings = initialSettings;
@@ -74,6 +93,12 @@ export function createFairgroundScene({
     }
 
     create() {
+      this.#artStates = this.registry.get("world-art-state") ?? {};
+      const visualFixture = getVisualFixture(
+        debug,
+        new URLSearchParams(window.location.search).get("visual-test"),
+      );
+      this.#visualTest = visualFixture !== undefined;
       this.cameras.main.setBackgroundColor(0xb7d6a3);
       this.physics.world.setBounds(0, 0, FAIRGROUND_MAP.width, FAIRGROUND_MAP.height);
       this.cameras.main.setBounds(0, 0, FAIRGROUND_MAP.width, FAIRGROUND_MAP.height);
@@ -84,9 +109,15 @@ export function createFairgroundScene({
           FAIRGROUND_MAP.height / 2,
           FAIRGROUND_MAP.width,
           FAIRGROUND_MAP.height,
-          0x99bd7c,
+          ASSET_BY_KEY.get("surface/ground/grass-a")?.placeholder.color ?? 0x99bd7c,
         )
         .setDepth(-10);
+      if (this.#artReady("surface/ground/grass-a")) {
+        this.add
+          .tileSprite(0, 0, FAIRGROUND_MAP.width, FAIRGROUND_MAP.height, "surface/ground/grass-a")
+          .setOrigin(0)
+          .setDepth(-9);
+      }
 
       for (const path of FAIRGROUND_MAP.paths) {
         this.add
@@ -95,35 +126,49 @@ export function createFairgroundScene({
             path.y + path.height / 2,
             path.width,
             path.height,
-            0xe5d3a2,
+            ASSET_BY_KEY.get("surface/path/clay")?.placeholder.color ?? 0xe5d3a2,
           )
           .setDepth(-5);
+        if (this.#artReady("surface/path/clay")) {
+          this.add
+            .tileSprite(path.x, path.y, path.width, path.height, "surface/path/clay")
+            .setOrigin(0)
+            .setTilePosition(path.x, path.y)
+            .setDepth(-4);
+        }
       }
+
+      const decorationPlan = createFairgroundDecorationPlan(ATTRACTIONS);
 
       const obstacles: Phaser.GameObjects.Rectangle[] = [];
       const attractionRenderPlan = createAttractionRenderPlan(ATTRACTIONS, ASSET_BY_KEY);
       for (const plan of attractionRenderPlan) {
-        const placeholder = this.add
-          .rectangle(
-            plan.center.x,
-            plan.center.y,
-            plan.size.width,
-            plan.size.height,
-            plan.baseColor,
-          )
-          .setDepth(plan.structureDepth);
-        placeholder.setStrokeStyle(4, 0x25362d);
-
-        const label = this.add
-          .text(plan.labelPosition.x, plan.labelPosition.y, plan.label, {
-            align: "center",
-            color: "#ffffff",
-            fontFamily: "sans-serif",
-            fontSize: "22px",
-            fontStyle: "bold",
-          })
-          .setOrigin(0.5)
-          .setDepth(plan.labelDepth);
+        const art = plan.artwork;
+        const artwork =
+          art && this.#artReady(art.key)
+            ? this.add.image(art.x, art.y, art.key).setOrigin(0).setDepth(plan.structureDepth)
+            : null;
+        const glowKeys = artwork && art ? createSilhouetteGlow(this.textures, art) : null;
+        const glow =
+          glowKeys && art
+            ? this.add
+                .image(art.x - GLOW_PADDING, art.y - GLOW_PADDING, glowKeys.warm)
+                .setOrigin(0)
+                .setDepth(plan.structureDepth - 0.01)
+                .setVisible(false)
+            : null;
+        const placeholder = artwork
+          ? null
+          : this.add
+              .rectangle(
+                plan.center.x,
+                plan.center.y,
+                plan.size.width,
+                plan.size.height,
+                plan.baseColor,
+              )
+              .setDepth(plan.structureDepth + 0.005);
+        placeholder?.setStrokeStyle(4, 0x25362d);
 
         for (const shape of plan.collisionShapes) {
           const collisionBody = this.add
@@ -143,6 +188,7 @@ export function createFairgroundScene({
         let interactionMarker: Phaser.GameObjects.Container | null = null;
         if (plan.interactive) {
           const zone = plan.interactionZone;
+          const markerPosition = getInteractionMarkerPosition(plan);
           const zoneOutline = this.add
             .rectangle(
               zone.x + zone.width / 2,
@@ -150,49 +196,131 @@ export function createFairgroundScene({
               zone.width,
               zone.height,
               0xffef9a,
-              debug ? 0.18 : 0,
+              debug && !this.#visualTest ? 0.18 : 0,
             )
-            .setStrokeStyle(debug ? 2 : 0, 0x25362d);
+            .setStrokeStyle(debug && !this.#visualTest ? 2 : 0, 0x25362d);
           const interactionText = this.add
-            .text(plan.entrancePosition.x, plan.interactionZone.y + 32, "ENTER / SPACE", {
-              backgroundColor: "#25362d",
-              color: "#fff8d8",
-              fontFamily: "sans-serif",
-              fontSize: "18px",
-              fontStyle: "bold",
-              padding: { x: 10, y: 6 },
-            })
-            .setOrigin(0.5);
+            .text(
+              markerPosition.x,
+              markerPosition.y,
+              art ? "Enter / Space to open" : "ENTER / SPACE",
+              {
+                ...(art
+                  ? { stroke: "#fff8e6", strokeThickness: 3 }
+                  : { backgroundColor: "#25362d" }),
+                color: art ? "#173449" : "#fff8d8",
+                fontFamily: "sans-serif",
+                fontSize: art ? "13px" : "18px",
+                fontStyle: "bold",
+                padding: art ? { x: 0, y: 0 } : { x: 10, y: 6 },
+              },
+            )
+            .setOrigin(art ? 0 : 0.5);
           interactionMarker = this.add
             .container(0, 0, [zoneOutline, interactionText])
             .setDepth(WORLD_OVERLAY_DEPTH)
             .setVisible(false);
         }
 
+        const visitedPlan = decorationPlan.visitedMarkers.find(
+          ({ attractionId }) => attractionId === plan.id,
+        );
+        const visitedMarker = visitedPlan
+          ? this.add
+              .container(visitedPlan.x, visitedPlan.y, [
+                this.add
+                  .circle(0, 0, 13, DECORATION_PALETTE.cream)
+                  .setStrokeStyle(3, DECORATION_PALETTE.teal),
+                this.add
+                  .text(0, 0, visitedPlan.symbol, {
+                    color: "#31777a",
+                    fontFamily: "sans-serif",
+                    fontSize: "18px",
+                    fontStyle: "bold",
+                  })
+                  .setOrigin(0.5),
+              ])
+              .setDepth(WORLD_OVERLAY_DEPTH - 0.01)
+              .setVisible(false)
+          : null;
+
         this.#attractionVisuals.set(plan.id, {
           plan,
           structure: placeholder,
-          label,
+          artwork,
+          glow,
+          glowKeys,
           interactionMarker,
+          visitedMarker,
           visited: false,
         });
       }
 
-      this.#player = this.add.rectangle(
-        FAIRGROUND_MAP.spawn.x,
-        FAIRGROUND_MAP.spawn.y,
-        PLAYER_WIDTH,
-        PLAYER_HEIGHT,
-        0x26343d,
-      );
-      this.#player.setStrokeStyle(3, 0xffffff);
+      for (const marker of decorationPlan.comingSoonMarkers) {
+        const visual = this.#attractionVisuals.get(marker.attractionId);
+        if (!visual) continue;
+        const plaque = this.add
+          .rectangle(0, 0, marker.width, 28, DECORATION_PALETTE.coral)
+          .setStrokeStyle(2, DECORATION_PALETTE.cream);
+        const label = this.add
+          .text(0, 0, marker.label, {
+            color: "#f8f4e9",
+            fontFamily: "sans-serif",
+            fontSize: "12px",
+            fontStyle: "bold",
+          })
+          .setOrigin(0.5);
+        this.add
+          .container(marker.x, marker.y, [plaque, label])
+          .setDepth(visual.plan.structureDepth + 0.02);
+      }
+
+      // Repeated props stay wholly inside collision footprints and away from approaches.
+      for (const position of decorationPlan.planters) {
+        const prop = ASSET_BY_KEY.get("prop/planter");
+        const art = prop?.runtime;
+        const depth =
+          (this.#attractionVisuals.get(position.attractionId)?.plan.structureDepth ?? position.y) +
+          0.002;
+        if (art?.anchor && this.#artReady("prop/planter")) {
+          this.add
+            .image(position.x - art.anchor.x, position.y - art.anchor.y, "prop/planter")
+            .setOrigin(0)
+            .setDepth(depth);
+        } else if (prop) {
+          this.add
+            .rectangle(
+              position.x,
+              position.y - prop.placeholder.height / 2,
+              prop.placeholder.width,
+              prop.placeholder.height,
+              prop.placeholder.color,
+            )
+            .setDepth(depth);
+        }
+      }
+
+      this.#player = this.#artReady("player/walk")
+        ? this.add
+            .sprite(FAIRGROUND_MAP.spawn.x, FAIRGROUND_MAP.spawn.y, "player/walk", 0)
+            .setOrigin(0.5, 0.5)
+        : this.add.rectangle(
+            FAIRGROUND_MAP.spawn.x,
+            FAIRGROUND_MAP.spawn.y,
+            PLAYER_WIDTH,
+            PLAYER_HEIGHT,
+            ASSET_BY_KEY.get("player/walk")?.placeholder.color ?? 0x26343d,
+          );
+      if (this.#player instanceof Phaser.GameObjects.Rectangle)
+        this.#player.setStrokeStyle(3, 0xffffff);
+      this.#playerShadow = this.add.ellipse(this.#player.x, this.#player.y, 20, 8, 0x173449, 0.15);
       this.physics.add.existing(this.#player);
 
       const body = this.#player.body as Phaser.Physics.Arcade.Body;
       body.setCollideWorldBounds(true);
-      body.setSize(PLAYER_BODY_WIDTH, PLAYER_BODY_HEIGHT);
+      body.setSize(PLAYER_BODY_WIDTH, PLAYER_BODY_HEIGHT, false);
       body.setOffset(PLAYER_BODY_OFFSET_X, PLAYER_BODY_OFFSET_Y);
-      this.#updatePlayerDepth();
+      this.#syncPlayerBody();
 
       for (const obstacle of obstacles) {
         this.physics.add.collider(this.#player, obstacle);
@@ -202,7 +330,20 @@ export function createFairgroundScene({
       this.#resizeCamera(this.scale.gameSize.width, this.scale.gameSize.height);
       this.scale.on(Phaser.Scale.Events.RESIZE, this.#handleResize);
 
-      if (debug) {
+      if (visualFixture) {
+        this.#player.setPosition(visualFixture.player.x, visualFixture.player.y);
+        this.#syncPlayerBody();
+        this.#manualCamera = true;
+        this.cameras.main.stopFollow();
+        this.cameras.main.setZoom(this.#clampZoom(visualFixture.camera.zoom));
+        this.cameras.main.centerOn(visualFixture.camera.x, visualFixture.camera.y);
+        const arcade = this.#attractionVisuals.get("arcade");
+        if (arcade) arcade.visited = visualFixture.visited;
+        this.#updateAttractionSelection({ x: body.center.x, y: body.center.y });
+        this.#refreshAttractionVisuals();
+      }
+
+      if (debug && !this.#visualTest) {
         this.physics.world.createDebugGraphic();
       }
 
@@ -248,6 +389,8 @@ export function createFairgroundScene({
             this.#settings = command.settings;
             input.setScheme(command.settings.movementScheme);
             this.#applyCameraMotion();
+            if (command.settings.reducedMotion) this.#activeExit?.finish();
+            this.#updatePlayerArt({ x: 0, y: 0 }, 0);
             this.#refreshAttractionVisuals();
             break;
           case "set-visited": {
@@ -280,11 +423,40 @@ export function createFairgroundScene({
       this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
         this.#unsubscribeCommands?.();
         this.#unsubscribeCommands = null;
+        this.#activeExit?.cancel();
+        this.#activeExit = null;
+        this.#exiting = false;
         this.scale.off(Phaser.Scale.Events.RESIZE, this.#handleResize);
+        const host = this.game.canvas.parentElement;
+        if (debug && host) {
+          for (const key of [
+            "worldArtReady",
+            "worldArtState",
+            "playerFrame",
+            "playerX",
+            "playerY",
+            "playerGroundX",
+            "playerGroundY",
+          ])
+            delete host.dataset[key];
+        }
       });
 
       bridge.emit({ type: "world-ready" });
       this.#reportCamera();
+      if (debug) {
+        const report = () => this.#reportPlayerArt();
+        this.events.on(Phaser.Scenes.Events.POST_UPDATE, report);
+        this.events.once(Phaser.Scenes.Events.SHUTDOWN, () =>
+          this.events.off(Phaser.Scenes.Events.POST_UPDATE, report),
+        );
+        const host = this.game.canvas.parentElement;
+        if (host) {
+          host.dataset.worldArtState = JSON.stringify(this.#artStates);
+          host.dataset.worldArtReady = "true";
+        }
+        this.#reportPlayerArt();
+      }
     }
 
     update(time: number) {
@@ -293,6 +465,7 @@ export function createFairgroundScene({
       if (this.#manualCamera && (velocity.x !== 0 || velocity.y !== 0)) this.#returnCamera();
       body.setVelocity(velocity.x, velocity.y);
       this.#updatePlayerDepth();
+      this.#updatePlayerArt(this.#exiting ? { x: 0, y: 1 } : velocity, time);
 
       if (!this.#exiting) {
         this.#updateAttractionSelection({ x: body.center.x, y: body.center.y });
@@ -341,6 +514,7 @@ export function createFairgroundScene({
     #stopMovement() {
       const body = this.#player?.body as Phaser.Physics.Arcade.Body | undefined;
       body?.setVelocity(0, 0);
+      if (this.#player) this.#updatePlayerArt({ x: 0, y: 0 }, 0);
     }
 
     #updateAttractionSelection(playerGroundPosition: { x: number; y: number }) {
@@ -365,11 +539,25 @@ export function createFairgroundScene({
           selected,
           visited: visual.visited,
           highContrast: this.#settings.highContrastWorldIndicators,
+          artworkReady: visual.artwork !== null,
         });
-        visual.structure.setFillStyle(state.fillColor);
-        visual.structure.setStrokeStyle(state.strokeWidth, state.strokeColor);
-        visual.label.setText(state.label);
+        visual.structure?.setFillStyle(state.fillColor);
+        visual.structure?.setStrokeStyle(state.strokeWidth, state.strokeColor);
+        if (visual.glow && visual.glowKeys) {
+          visual.glow
+            .setTexture(state.glow?.highContrast ? visual.glowKeys.contrast : visual.glowKeys.warm)
+            .setVisible(state.glow?.visible ?? false);
+        }
+        const art = visual.plan.artwork;
+        if (visual.artwork && art) {
+          visual.artwork.setTexture(
+            selected && art.selectedKey && this.#artReady(art.selectedKey)
+              ? art.selectedKey
+              : art.key,
+          );
+        }
         visual.interactionMarker?.setVisible(state.showInteractionMarker);
+        visual.visitedMarker?.setVisible(visual.visited);
       }
     }
 
@@ -394,25 +582,33 @@ export function createFairgroundScene({
       this.#player.setPosition(exit.from.x, exit.from.y);
       this.#syncPlayerBody();
 
-      const complete = () => {
-        this.#player.setPosition(exit.to.x, exit.to.y);
-        this.#syncPlayerBody();
-        this.#exiting = false;
-        bridge.emit({ type: "attraction-exit-complete", attractionId });
-      };
+      let tween: Phaser.Tweens.Tween | undefined;
+      const transition = createExitTransition(
+        () => tween?.stop(),
+        () => {
+          this.#activeExit = null;
+          this.#player.setPosition(exit.to.x, exit.to.y);
+          this.#syncPlayerBody();
+          this.#exiting = false;
+          this.#playerFacing = "south";
+          this.#updatePlayerArt({ x: 0, y: 0 }, 0);
+          bridge.emit({ type: "attraction-exit-complete", attractionId });
+        },
+      );
+      this.#activeExit = transition;
 
       if (this.#settings.reducedMotion) {
-        complete();
+        transition.finish();
         return;
       }
 
-      this.tweens.add({
+      tween = this.tweens.add({
         targets: this.#player,
         x: exit.to.x,
         y: exit.to.y,
         duration: exit.durationMs,
         ease: "Sine.easeOut",
-        onComplete: complete,
+        onComplete: () => transition.finish(),
       });
     }
 
@@ -494,11 +690,39 @@ export function createFairgroundScene({
       const body = this.#player.body as Phaser.Physics.Arcade.Body;
       body.updateFromGameObject();
       this.#updatePlayerDepth();
+      this.#reportPlayerArt();
+    }
+
+    #artReady(key: string) {
+      return this.#artStates[key] === "ready" && this.textures.exists(key);
+    }
+
+    #updatePlayerArt(velocity: { x: number; y: number }, time: number) {
+      const state = this.#visualTest
+        ? { facing: "south" as const, frame: 0 }
+        : getPlayerArtFrame(velocity, this.#playerFacing, this.#settings.reducedMotion, time);
+      this.#playerFacing = state.facing;
+      this.#playerFrame = state.frame;
+      if (this.#player instanceof Phaser.GameObjects.Sprite) this.#player.setFrame(state.frame);
+      this.#reportPlayerArt();
+    }
+
+    #reportPlayerArt() {
+      if (!debug || !this.#player) return;
+      const host = this.game.canvas.parentElement;
+      const body = this.#player.body as Phaser.Physics.Arcade.Body;
+      if (!host || !body) return;
+      host.dataset.playerFrame = String(this.#playerFrame);
+      host.dataset.playerX = String(this.#player.x);
+      host.dataset.playerY = String(this.#player.y);
+      host.dataset.playerGroundX = String(body.center.x);
+      host.dataset.playerGroundY = String(body.center.y);
     }
 
     #updatePlayerDepth() {
       const body = this.#player.body as Phaser.Physics.Arcade.Body;
       this.#player.setDepth(body.bottom);
+      this.#playerShadow?.setPosition(body.center.x, body.bottom).setDepth(body.bottom - 0.02);
     }
   };
 }

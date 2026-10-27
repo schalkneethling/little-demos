@@ -293,6 +293,9 @@ export function createDemoController(options: DemoControllerOptions) {
 
   return {
     isBusy: () => !!active || closing,
+    setReducedMotion(reducedMotion: boolean) {
+      session?.setReducedMotion(reducedMotion);
+    },
     openAttraction(attractionId: string) {
       const demo = findAvailableDemoForAttraction(demos, attractions, attractionId);
       if (demo) openDemo(demo, worldControl, true);
