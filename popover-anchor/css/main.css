@@ -1,0 +1,70 @@
+/* stylelint-disable declaration-property-value-no-unknown */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  margin: 0;
+  min-block-size: 100vh;
+  min-inline-size: 100vw;
+  padding: 2rem;
+}
+
+.example.end {
+  justify-self: end;
+}
+
+.trigger {
+  anchor-name: --flyout;
+  width: fit-content;
+}
+
+.options {
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+}
+
+.options-area {
+  inset: unset;
+  position-anchor: --flyout;
+  position-area: inline-end span-block-end;
+  position-try: flip-inline;
+}
+
+.options-absolute {
+  left: anchor(--flyout end);
+  position: absolute;
+  top: anchor(--flyout start);
+}
+
+.options-inset {
+  inset-block: anchor(--flyout start);
+  inset-inline: anchor(--flyout end);
+  position: fixed;
+}
+
+.options:popover-open {
+  background-color: #fff;
+  border: 0.125rem solid #212121;
+  color: #212121;
+  display: grid;
+  gap: 1rem;
+  height: initial;
+  inline-size: max-content;
+}
+
+.anchor-support {
+  display: none;
+}
+
+@supports not (inset: anchor(--flyout start)) {
+  .anchor-support {
+    display: block;
+    line-height: 1.75;
+    max-inline-size: 110ch;
+  }
+}
