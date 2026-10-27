@@ -20,6 +20,7 @@ marked coming soon; the remaining landmarks are decorative.
 | [contrast-color-playground](./contrast-color-playground/)     | Explore how `contrast-color()` picks black or white text for any background color.                |
 | [property-transition](./property-transition/)                 | Register custom properties with `@property` so CSS transitions can interpolate them.              |
 | [dynamic-javascript-imports](./dynamic-javascript-imports/)   | Load optional slider navigation on demand.                                                        |
+| [json-module-examples](./json-module-examples/)               | Load a JSON file as a module script with an import attribute and render it as a list.             |
 | [fluid-typography-playground](./fluid-typography-playground/) | Dial in a fluid font size with `clamp()` and see the linear math behind it.                       |
 | [popover-anchor](./popover-anchor/)                           | Combine a popover with CSS anchor positioning, with a polyfill for browsers that lack `anchor()`. |
 | [zipper](./zipper/)                                           | Compress and decompress local files using browser streams.                                        |

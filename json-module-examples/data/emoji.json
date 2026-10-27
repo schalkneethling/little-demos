@@ -1,0 +1,751 @@
+[
+  {
+    "name": "monkey face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128053;"],
+    "unicode": ["U+1F435"]
+  },
+  {
+    "name": "monkey",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128018;"],
+    "unicode": ["U+1F412"]
+  },
+  {
+    "name": "gorilla",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#129421;"],
+    "unicode": ["U+1F98D"]
+  },
+  {
+    "name": "dog face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128054;"],
+    "unicode": ["U+1F436"]
+  },
+  {
+    "name": "dog",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128021;"],
+    "unicode": ["U+1F415"]
+  },
+  {
+    "name": "poodle",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128041;"],
+    "unicode": ["U+1F429"]
+  },
+  {
+    "name": "wolf face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128058;"],
+    "unicode": ["U+1F43A"]
+  },
+  {
+    "name": "fox face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#129418;"],
+    "unicode": ["U+1F98A"]
+  },
+  {
+    "name": "cat face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128049;"],
+    "unicode": ["U+1F431"]
+  },
+  {
+    "name": "cat",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128008;"],
+    "unicode": ["U+1F408"]
+  },
+  {
+    "name": "lion face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#129409;"],
+    "unicode": ["U+1F981"]
+  },
+  {
+    "name": "tiger face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128047;"],
+    "unicode": ["U+1F42F"]
+  },
+  {
+    "name": "tiger",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128005;"],
+    "unicode": ["U+1F405"]
+  },
+  {
+    "name": "leopard",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128006;"],
+    "unicode": ["U+1F406"]
+  },
+  {
+    "name": "horse face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128052;"],
+    "unicode": ["U+1F434"]
+  },
+  {
+    "name": "horse",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128014;"],
+    "unicode": ["U+1F40E"]
+  },
+  {
+    "name": "deer",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#129420;"],
+    "unicode": ["U+1F98C"]
+  },
+  {
+    "name": "unicorn face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#129412;"],
+    "unicode": ["U+1F984"]
+  },
+  {
+    "name": "cow face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128046;"],
+    "unicode": ["U+1F42E"]
+  },
+  {
+    "name": "ox",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128002;"],
+    "unicode": ["U+1F402"]
+  },
+  {
+    "name": "water buffalo",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128003;"],
+    "unicode": ["U+1F403"]
+  },
+  {
+    "name": "cow",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128004;"],
+    "unicode": ["U+1F404"]
+  },
+  {
+    "name": "pig face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128055;"],
+    "unicode": ["U+1F437"]
+  },
+  {
+    "name": "pig",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128022;"],
+    "unicode": ["U+1F416"]
+  },
+  {
+    "name": "boar",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128023;"],
+    "unicode": ["U+1F417"]
+  },
+  {
+    "name": "pig nose",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128061;"],
+    "unicode": ["U+1F43D"]
+  },
+  {
+    "name": "ram",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128015;"],
+    "unicode": ["U+1F40F"]
+  },
+  {
+    "name": "sheep",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128017;"],
+    "unicode": ["U+1F411"]
+  },
+  {
+    "name": "goat",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128016;"],
+    "unicode": ["U+1F410"]
+  },
+  {
+    "name": "dromedary camel ≊ camel",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128042;"],
+    "unicode": ["U+1F42A"]
+  },
+  {
+    "name": "bactrian camel ≊ two-hump camel",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128043;"],
+    "unicode": ["U+1F42B"]
+  },
+  {
+    "name": "elephant",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128024;"],
+    "unicode": ["U+1F418"]
+  },
+  {
+    "name": "rhinoceros",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#129423;"],
+    "unicode": ["U+1F98F"]
+  },
+  {
+    "name": "mouse face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128045;"],
+    "unicode": ["U+1F42D"]
+  },
+  {
+    "name": "mouse",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128001;"],
+    "unicode": ["U+1F401"]
+  },
+  {
+    "name": "rat",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128000;"],
+    "unicode": ["U+1F400"]
+  },
+  {
+    "name": "hamster face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128057;"],
+    "unicode": ["U+1F439"]
+  },
+  {
+    "name": "rabbit face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128048;"],
+    "unicode": ["U+1F430"]
+  },
+  {
+    "name": "rabbit",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128007;"],
+    "unicode": ["U+1F407"]
+  },
+  {
+    "name": "chipmunk",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128063;"],
+    "unicode": ["U+1F43F"]
+  },
+  {
+    "name": "bat",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#129415;"],
+    "unicode": ["U+1F987"]
+  },
+  {
+    "name": "bear face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128059;"],
+    "unicode": ["U+1F43B"]
+  },
+  {
+    "name": "koala",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128040;"],
+    "unicode": ["U+1F428"]
+  },
+  {
+    "name": "panda face",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128060;"],
+    "unicode": ["U+1F43C"]
+  },
+  {
+    "name": "paw prints",
+    "category": "animals and nature",
+    "group": "animal mammal",
+    "htmlCode": ["\u0026#128062;"],
+    "unicode": ["U+1F43E"]
+  },
+  {
+    "name": "turkey",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#129411;"],
+    "unicode": ["U+1F983"]
+  },
+  {
+    "name": "chicken",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128020;"],
+    "unicode": ["U+1F414"]
+  },
+  {
+    "name": "rooster",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128019;"],
+    "unicode": ["U+1F413"]
+  },
+  {
+    "name": "hatching chick",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128035;"],
+    "unicode": ["U+1F423"]
+  },
+  {
+    "name": "baby chick",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128036;"],
+    "unicode": ["U+1F424"]
+  },
+  {
+    "name": "front-facing baby chick",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128037;"],
+    "unicode": ["U+1F425"]
+  },
+  {
+    "name": "bird",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128038;"],
+    "unicode": ["U+1F426"]
+  },
+  {
+    "name": "penguin",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128039;"],
+    "unicode": ["U+1F427"]
+  },
+  {
+    "name": "dove of peace ≊ dove",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#128330;"],
+    "unicode": ["U+1F54A"]
+  },
+  {
+    "name": "eagle",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#129413;"],
+    "unicode": ["U+1F985"]
+  },
+  {
+    "name": "duck",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#129414;"],
+    "unicode": ["U+1F986"]
+  },
+  {
+    "name": "owl",
+    "category": "animals and nature",
+    "group": "animal bird",
+    "htmlCode": ["\u0026#129417;"],
+    "unicode": ["U+1F989"]
+  },
+  {
+    "name": "frog face",
+    "category": "animals and nature",
+    "group": "animal amphibian",
+    "htmlCode": ["\u0026#128056;"],
+    "unicode": ["U+1F438"]
+  },
+  {
+    "name": "crocodile",
+    "category": "animals and nature",
+    "group": "animal reptile",
+    "htmlCode": ["\u0026#128010;"],
+    "unicode": ["U+1F40A"]
+  },
+  {
+    "name": "turtle",
+    "category": "animals and nature",
+    "group": "animal reptile",
+    "htmlCode": ["\u0026#128034;"],
+    "unicode": ["U+1F422"]
+  },
+  {
+    "name": "lizard",
+    "category": "animals and nature",
+    "group": "animal reptile",
+    "htmlCode": ["\u0026#129422;"],
+    "unicode": ["U+1F98E"]
+  },
+  {
+    "name": "snake",
+    "category": "animals and nature",
+    "group": "animal reptile",
+    "htmlCode": ["\u0026#128013;"],
+    "unicode": ["U+1F40D"]
+  },
+  {
+    "name": "dragon face",
+    "category": "animals and nature",
+    "group": "animal reptile",
+    "htmlCode": ["\u0026#128050;"],
+    "unicode": ["U+1F432"]
+  },
+  {
+    "name": "dragon",
+    "category": "animals and nature",
+    "group": "animal reptile",
+    "htmlCode": ["\u0026#128009;"],
+    "unicode": ["U+1F409"]
+  },
+  {
+    "name": "spouting whale",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128051;"],
+    "unicode": ["U+1F433"]
+  },
+  {
+    "name": "whale",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128011;"],
+    "unicode": ["U+1F40B"]
+  },
+  {
+    "name": "dolphin",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128044;"],
+    "unicode": ["U+1F42C"]
+  },
+  {
+    "name": "fish",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128031;"],
+    "unicode": ["U+1F41F"]
+  },
+  {
+    "name": "tropical fish",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128032;"],
+    "unicode": ["U+1F420"]
+  },
+  {
+    "name": "blowfish",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128033;"],
+    "unicode": ["U+1F421"]
+  },
+  {
+    "name": "shark",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#129416;"],
+    "unicode": ["U+1F988"]
+  },
+  {
+    "name": "octopus",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128025;"],
+    "unicode": ["U+1F419"]
+  },
+  {
+    "name": "spiral shell",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#128026;"],
+    "unicode": ["U+1F41A"]
+  },
+  {
+    "name": "crab",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#129408;"],
+    "unicode": ["U+1F980"]
+  },
+  {
+    "name": "shrimp",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#129424;"],
+    "unicode": ["U+1F990"]
+  },
+  {
+    "name": "squid",
+    "category": "animals and nature",
+    "group": "animal marine",
+    "htmlCode": ["\u0026#129425;"],
+    "unicode": ["U+1F991"]
+  },
+  {
+    "name": "butterfly",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#129419;"],
+    "unicode": ["U+1F98B"]
+  },
+  {
+    "name": "snail",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#128012;"],
+    "unicode": ["U+1F40C"]
+  },
+  {
+    "name": "bug",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#128027;"],
+    "unicode": ["U+1F41B"]
+  },
+  {
+    "name": "ant",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#128028;"],
+    "unicode": ["U+1F41C"]
+  },
+  {
+    "name": "honeybee",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#128029;"],
+    "unicode": ["U+1F41D"]
+  },
+  {
+    "name": "lady beetle",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#128030;"],
+    "unicode": ["U+1F41E"]
+  },
+  {
+    "name": "spider",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#128375;"],
+    "unicode": ["U+1F577"]
+  },
+  {
+    "name": "spider web",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#128376;"],
+    "unicode": ["U+1F578"]
+  },
+  {
+    "name": "scorpion",
+    "category": "animals and nature",
+    "group": "animal bug",
+    "htmlCode": ["\u0026#129410;"],
+    "unicode": ["U+1F982"]
+  },
+  {
+    "name": "bouquet",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#128144;"],
+    "unicode": ["U+1F490"]
+  },
+  {
+    "name": "cherry blossom",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#127800;"],
+    "unicode": ["U+1F338"]
+  },
+  {
+    "name": "white flower",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#128174;"],
+    "unicode": ["U+1F4AE"]
+  },
+  {
+    "name": "rosette",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#127989;"],
+    "unicode": ["U+1F3F5"]
+  },
+  {
+    "name": "rose",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#127801;"],
+    "unicode": ["U+1F339"]
+  },
+  {
+    "name": "wilted flower",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#129344;"],
+    "unicode": ["U+1F940"]
+  },
+  {
+    "name": "hibiscus",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#127802;"],
+    "unicode": ["U+1F33A"]
+  },
+  {
+    "name": "sunflower",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#127803;"],
+    "unicode": ["U+1F33B"]
+  },
+  {
+    "name": "blossom",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#127804;"],
+    "unicode": ["U+1F33C"]
+  },
+  {
+    "name": "tulip",
+    "category": "animals and nature",
+    "group": "plant flower",
+    "htmlCode": ["\u0026#127799;"],
+    "unicode": ["U+1F337"]
+  },
+  {
+    "name": "seedling",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127793;"],
+    "unicode": ["U+1F331"]
+  },
+  {
+    "name": "evergreen tree ≊ evergreen",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127794;"],
+    "unicode": ["U+1F332"]
+  },
+  {
+    "name": "deciduous tree",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127795;"],
+    "unicode": ["U+1F333"]
+  },
+  {
+    "name": "palm tree",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127796;"],
+    "unicode": ["U+1F334"]
+  },
+  {
+    "name": "cactus",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127797;"],
+    "unicode": ["U+1F335"]
+  },
+  {
+    "name": "ear of rice ≊ sheaf of rice",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127806;"],
+    "unicode": ["U+1F33E"]
+  },
+  {
+    "name": "herb",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127807;"],
+    "unicode": ["U+1F33F"]
+  },
+  {
+    "name": "shamrock",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#9752;"],
+    "unicode": ["U+2618"]
+  },
+  {
+    "name": "four leaf clover",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127808;"],
+    "unicode": ["U+1F340"]
+  },
+  {
+    "name": "maple leaf",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127809;"],
+    "unicode": ["U+1F341"]
+  },
+  {
+    "name": "fallen leaf",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127810;"],
+    "unicode": ["U+1F342"]
+  },
+  {
+    "name": "leaf fluttering in wind",
+    "category": "animals and nature",
+    "group": "plant other",
+    "htmlCode": ["\u0026#127811;"],
+    "unicode": ["U+1F343"]
+  }
+]
