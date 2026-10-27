@@ -3,6 +3,10 @@ import { createHash } from "node:crypto";
 
 const artKeys = [
   "attraction/arcade/base",
+  "attraction/carousel/base",
+  "attraction/ferris-wheel/base",
+  "attraction/fountain/base",
+  "attraction/tent/base",
   "player/walk",
   "prop/planter",
   "surface/ground/grass-a",
@@ -11,7 +15,8 @@ const artKeys = [
 const arcadeImage = /\/base(?:-[\w-]+)?\.png(?:\?.*)?$/;
 const playerImage = /\/walk(?:-[\w-]+)?\.png(?:\?.*)?$/;
 const grassImage = /\/grass-a(?:-[\w-]+)?\.png(?:\?.*)?$/;
-const runtimeImage = /\/(?:base|walk|planter|grass-a|clay)(?:-[\w-]+)?\.png(?:\?.*)?$/;
+const runtimeImage =
+  /\/(?:base|carousel|ferris-wheel|fountain|tent|walk|planter|grass-a|clay)(?:-[\w-]+)?\.png(?:\?.*)?$/;
 // Locator screenshots include overlapping siblings. Compare world art, not the
 // HTML shell (covered by the separate UI/a11y tests in the same pinned container).
 // Visibility preserves layout; every canvas pixel, including labels, stays visible.
@@ -49,7 +54,7 @@ async function expectPlayerPoint(page: Page, x: number, y: number) {
   await expect(canvasParent).toHaveAttribute("data-player-ground-y", String(y + 16));
 }
 
-test("the production world fetches and decodes all five modular art textures", async ({ page }) => {
+test("the production world fetches and decodes all modular art textures", async ({ page }) => {
   const errors: string[] = [];
   const requests: string[] = [];
   const responses = new Map<string, number>();
@@ -61,8 +66,8 @@ test("the production world fetches and decodes all five modular art textures", a
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/?debug-world");
   await expectArtSettled(page);
-  expect(responses.size).toBe(5);
-  expect([...responses.values()]).toEqual(Array(5).fill(200));
+  expect(responses.size).toBe(artKeys.length);
+  expect([...responses.values()]).toEqual(Array(artKeys.length).fill(200));
   expect(requests.some((url) => /\/art\/source\/|\/concepts\//.test(url))).toBe(false);
   await expectPlayerPoint(page, 960, 1120);
   await expect(page.locator("[data-world-canvas]")).toHaveAttribute("data-player-frame", "0");

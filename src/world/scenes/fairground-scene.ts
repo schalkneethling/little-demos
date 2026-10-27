@@ -12,7 +12,11 @@ import type { AssetLoadStates } from "../assets/asset-loading";
 import { getPlayerArtFrame, type PlayerFacing } from "../rendering/player-art";
 import { getVisualFixture } from "../rendering/visual-fixtures";
 import { createSilhouetteGlow, GLOW_PADDING } from "../rendering/silhouette-glow";
-import { ARCADE_PLANTERS } from "../rendering/arcade-decoration";
+import {
+  DECORATION_PALETTE,
+  createFairgroundDecorationPlan,
+  shouldAnimateDecorations,
+} from "../rendering/fairground-decoration";
 import type { WorldBridge } from "../bridge/world-events";
 import type { KeyboardInput } from "../input/keyboard-input";
 import { createDiagnosticsThrottle } from "../diagnostics";
@@ -55,6 +59,7 @@ interface AttractionVisual {
   glow: Phaser.GameObjects.Image | null;
   glowKeys: { warm: string; contrast: string } | null;
   interactionMarker: Phaser.GameObjects.Container | null;
+  visitedMarker: Phaser.GameObjects.Container | null;
   visited: boolean;
 }
 
@@ -80,6 +85,7 @@ export function createFairgroundScene({
     #lastPosition = { ...FAIRGROUND_MAP.spawn };
     #lastPositionReportAt = 0;
     readonly #attractionVisuals = new Map<string, AttractionVisual>();
+    readonly #ambientLights: { light: Phaser.GameObjects.Arc; phase: number }[] = [];
     readonly #diagnosticsThrottle = createDiagnosticsThrottle(DIAGNOSTICS_REPORT_INTERVAL);
 
     constructor() {
@@ -131,6 +137,27 @@ export function createFairgroundScene({
             .setDepth(-4);
         }
       }
+
+      const decorationPlan = createFairgroundDecorationPlan(ATTRACTIONS);
+      const sign = decorationPlan.entranceSign;
+      const signPanel = this.add
+        .rectangle(0, -14, sign.width, sign.height, DECORATION_PALETTE.cream)
+        .setStrokeStyle(4, DECORATION_PALETTE.teal);
+      const signPosts = [
+        this.add.rectangle(-82, 18, 10, 36, DECORATION_PALETTE.teal),
+        this.add.rectangle(82, 18, 10, 36, DECORATION_PALETTE.teal),
+      ];
+      const signText = this.add
+        .text(0, -14, sign.label, {
+          color: "#31777a",
+          fontFamily: "sans-serif",
+          fontSize: "25px",
+          fontStyle: "bold",
+        })
+        .setOrigin(0.5);
+      this.add
+        .container(sign.x, sign.y, [signPanel, ...signPosts, signText])
+        .setDepth(sign.y + 0.01);
 
       const obstacles: Phaser.GameObjects.Rectangle[] = [];
       const attractionRenderPlan = createAttractionRenderPlan(ATTRACTIONS, ASSET_BY_KEY);
@@ -214,6 +241,28 @@ export function createFairgroundScene({
             .setVisible(false);
         }
 
+        const visitedPlan = decorationPlan.visitedMarkers.find(
+          ({ attractionId }) => attractionId === plan.id,
+        );
+        const visitedMarker = visitedPlan
+          ? this.add
+              .container(visitedPlan.x, visitedPlan.y, [
+                this.add
+                  .circle(0, 0, 13, DECORATION_PALETTE.cream)
+                  .setStrokeStyle(3, DECORATION_PALETTE.teal),
+                this.add
+                  .text(0, 0, visitedPlan.symbol, {
+                    color: "#31777a",
+                    fontFamily: "sans-serif",
+                    fontSize: "18px",
+                    fontStyle: "bold",
+                  })
+                  .setOrigin(0.5),
+              ])
+              .setDepth(WORLD_OVERLAY_DEPTH - 0.01)
+              .setVisible(false)
+          : null;
+
         this.#attractionVisuals.set(plan.id, {
           plan,
           structure: placeholder,
@@ -221,19 +270,42 @@ export function createFairgroundScene({
           glow,
           glowKeys,
           interactionMarker,
+          visitedMarker,
           visited: false,
         });
       }
 
-      // Authored decoration stays within the existing solid arcade footprint.
-      for (const position of ARCADE_PLANTERS) {
+      for (const marker of decorationPlan.comingSoonMarkers) {
+        const visual = this.#attractionVisuals.get(marker.attractionId);
+        if (!visual) continue;
+        const plaque = this.add
+          .rectangle(0, 0, marker.width, 28, DECORATION_PALETTE.coral)
+          .setStrokeStyle(2, DECORATION_PALETTE.cream);
+        const label = this.add
+          .text(0, 0, marker.label, {
+            color: "#f8f4e9",
+            fontFamily: "sans-serif",
+            fontSize: "12px",
+            fontStyle: "bold",
+          })
+          .setOrigin(0.5);
+        this.add
+          .container(marker.x, marker.y, [plaque, label])
+          .setDepth(visual.plan.structureDepth + 0.02);
+      }
+
+      // Repeated props stay wholly inside collision footprints and away from approaches.
+      for (const position of decorationPlan.planters) {
         const prop = ASSET_BY_KEY.get("prop/planter");
         const art = prop?.runtime;
+        const depth =
+          (this.#attractionVisuals.get(position.attractionId)?.plan.structureDepth ?? position.y) +
+          0.002;
         if (art?.anchor && this.#artReady("prop/planter")) {
           this.add
             .image(position.x - art.anchor.x, position.y - art.anchor.y, "prop/planter")
             .setOrigin(0)
-            .setDepth(1060.002);
+            .setDepth(depth);
         } else if (prop) {
           this.add
             .rectangle(
@@ -243,9 +315,18 @@ export function createFairgroundScene({
               prop.placeholder.height,
               prop.placeholder.color,
             )
-            .setDepth(1060.002);
+            .setDepth(depth);
         }
       }
+
+      for (const lightPlan of decorationPlan.ambientLights) {
+        const light = this.add
+          .circle(lightPlan.x, lightPlan.y, 6, DECORATION_PALETTE.cream, 0.86)
+          .setStrokeStyle(2, DECORATION_PALETTE.coral)
+          .setDepth(lightPlan.y + 0.004);
+        this.#ambientLights.push({ light, phase: lightPlan.phase });
+      }
+      this.#updateAmbientLights(0);
 
       this.#player = this.#artReady("player/walk")
         ? this.add
@@ -336,6 +417,7 @@ export function createFairgroundScene({
             this.#settings = command.settings;
             input.setScheme(command.settings.movementScheme);
             this.#applyCameraMotion();
+            this.#updateAmbientLights(0);
             this.#refreshAttractionVisuals();
             break;
           case "set-visited": {
@@ -368,6 +450,7 @@ export function createFairgroundScene({
       this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
         this.#unsubscribeCommands?.();
         this.#unsubscribeCommands = null;
+        this.#ambientLights.length = 0;
         this.scale.off(Phaser.Scale.Events.RESIZE, this.#handleResize);
         const host = this.game.canvas.parentElement;
         if (debug && host) {
@@ -402,6 +485,7 @@ export function createFairgroundScene({
     }
 
     update(time: number) {
+      this.#updateAmbientLights(time);
       const velocity = getMovementVelocity(input.getIntent(), PLAYER_SPEED, this.#controlsActive);
       const body = this.#player.body as Phaser.Physics.Arcade.Body;
       if (this.#manualCamera && (velocity.x !== 0 || velocity.y !== 0)) this.#returnCamera();
@@ -499,6 +583,18 @@ export function createFairgroundScene({
           );
         }
         visual.interactionMarker?.setVisible(state.showInteractionMarker);
+        visual.visitedMarker?.setVisible(visual.visited);
+      }
+    }
+
+    #updateAmbientLights(time: number) {
+      const animate = shouldAnimateDecorations({
+        reducedMotion: this.#settings.reducedMotion,
+        visualFixture: this.#visualTest,
+      });
+      for (const { light, phase } of this.#ambientLights) {
+        const alpha = animate ? 0.74 + Math.sin(time / 700 + phase * Math.PI * 2) * 0.16 : 0.86;
+        light.setAlpha(alpha);
       }
     }
 
