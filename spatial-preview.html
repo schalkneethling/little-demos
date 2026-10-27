@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A playable spatial study for the next Little Demos fairground."
+    />
+    <title>Spatial preview · Little Demos</title>
+  </head>
+  <body>
+    <main class="preview-shell">
+      <section class="preview-stage" aria-labelledby="preview-title">
+        <header class="preview-heading">
+          <div>
+            <p class="preview-context">Little Demos / spatial study</p>
+            <h1 id="preview-title">A fairground with room to roam.</h1>
+          </div>
+          <a class="back-link" href="/">Return to the current fairground</a>
+        </header>
+        <div class="stage-frame">
+          <div
+            class="world-control"
+            data-world-control
+            tabindex="0"
+            role="application"
+            aria-label="Spatial preview fairground"
+            aria-describedby="preview-instructions"
+          >
+            <div data-canvas aria-hidden="true"></div>
+          </div>
+          <div class="stage-caption">
+            <p data-status role="status" aria-live="polite">Preparing the preview…</p>
+            <p>Approval study · no demos launch here</p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="preview-guide" aria-labelledby="guide-title">
+        <h2 id="guide-title">Explore the plan</h2>
+        <p id="preview-instructions">
+          Choose Explore, then walk with Arrow keys or WASD. Press Escape or Tab away to stop
+          walking. Drag the scene to pan; Return to player resumes following.
+        </p>
+        <div class="control-actions">
+          <button type="button" data-explore>Explore</button>
+          <button type="button" data-return>Return to player</button>
+        </div>
+        <div class="zoom-actions" role="group" aria-label="Preview zoom">
+          <button type="button" data-zoom-out aria-label="Zoom out">−</button>
+          <output data-zoom aria-label="Preview zoom">100%</output>
+          <button type="button" data-zoom-in aria-label="Zoom in">+</button>
+        </div>
+        <details class="route-plan" open>
+          <summary>Circulation plan</summary>
+          <div data-plan-map class="plan-map" aria-hidden="true"></div>
+          <p>
+            Arrive from the south. A broad promenade serves the two southern pavilions; the loop
+            reaches the ride grove to the northwest and the eastern pavilions. The fountain court
+            joins both sides. A quieter northeast spur ends at construction.
+          </p>
+          <ul data-route-list class="route-list"></ul>
+        </details>
+      </aside>
+    </main>
+    <script type="module" src="/src/world/prototype/main.ts"></script>
+  </body>
+</html>

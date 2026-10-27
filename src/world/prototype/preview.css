@@ -1,0 +1,219 @@
+@import url("../../styles/tokens.css");
+@import url("../../styles/global.css");
+
+body {
+  min-inline-size: 20rem;
+}
+
+.preview-shell {
+  align-items: start;
+  display: grid;
+  gap: clamp(1rem, 2vw, 2rem);
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 21rem);
+  margin-inline: auto;
+  max-inline-size: 104rem;
+  min-block-size: 100svh;
+  padding: clamp(0.75rem, 2vw, 2rem);
+}
+
+.preview-stage {
+  block-size: min(54rem, calc(100svh - 2rem));
+  display: grid;
+  gap: 1rem;
+  grid-template-rows: auto minmax(30rem, 1fr);
+  min-block-size: 38rem;
+  min-inline-size: 0;
+}
+
+.preview-heading {
+  align-items: end;
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.preview-context {
+  color: var(--color-teal);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.preview-heading h1 {
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  margin-block-start: 0.25rem;
+}
+
+.back-link {
+  flex: 0 0 auto;
+  font-weight: 700;
+  max-inline-size: 11rem;
+  text-align: right;
+}
+
+.stage-frame {
+  background: var(--color-world);
+  border: 0.25rem solid var(--color-ink);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+  display: grid;
+  grid-template-rows: minmax(30rem, 1fr) auto;
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.world-control,
+[data-canvas],
+[data-canvas] canvas {
+  block-size: 100%;
+  display: block;
+  inline-size: 100%;
+  min-block-size: 0;
+}
+
+.world-control {
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+[data-canvas] canvas {
+  cursor: grab;
+}
+
+.plan-map canvas {
+  block-size: auto;
+  display: block;
+  inline-size: 100%;
+}
+
+[data-canvas] canvas:active {
+  cursor: grabbing;
+}
+
+.stage-caption {
+  background: var(--color-panel);
+  color: var(--color-ink-soft);
+  display: flex;
+  font-size: 0.85rem;
+  font-weight: 600;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.65rem 0.9rem;
+}
+
+.preview-guide {
+  align-self: start;
+  background: var(--color-panel);
+  border: 0.15rem solid var(--color-ink);
+  border-radius: var(--radius-panel);
+  display: grid;
+  gap: 0.9rem;
+  min-inline-size: 0;
+  padding: 1.25rem;
+}
+
+.preview-guide h2 {
+  font-size: 1.8rem;
+}
+
+.preview-guide p,
+.route-list {
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+}
+
+.control-actions,
+.zoom-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.preview-guide button {
+  background: var(--color-panel);
+  border: 0.13rem solid var(--color-ink);
+  border-radius: var(--radius-control);
+  color: var(--color-ink);
+  font-weight: 700;
+  min-block-size: 2.75rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.preview-guide button[data-explore] {
+  background: var(--color-signal);
+  color: var(--color-white);
+}
+
+.preview-guide button:hover {
+  background: var(--color-sun);
+  color: var(--color-ink);
+}
+
+.zoom-actions output {
+  font-weight: 700;
+  min-inline-size: 4rem;
+  text-align: center;
+}
+
+.route-plan {
+  border-block-start: 0.1rem solid var(--color-panel-shadow);
+  padding-block-start: 0.75rem;
+}
+
+.route-plan summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.route-plan > * + * {
+  margin-block-start: 0.7rem;
+}
+
+.plan-map {
+  background: #8fb27d;
+  border: 0.1rem solid var(--color-ink);
+  border-radius: 0.35rem;
+  min-inline-size: 0;
+  overflow: hidden;
+}
+
+.route-list {
+  padding-inline-start: 1.25rem;
+}
+
+.route-list li + li {
+  margin-block-start: 0.3rem;
+}
+
+@media (width <= 58rem) {
+  .preview-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-stage {
+    block-size: auto;
+    grid-template-rows: auto 60svh;
+    min-block-size: 0;
+  }
+
+  .preview-guide {
+    max-inline-size: none;
+  }
+}
+
+@media (width <= 37rem) {
+  .preview-heading,
+  .stage-caption {
+    display: block;
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-block-start: 0.6rem;
+    max-inline-size: none;
+    text-align: left;
+  }
+
+  .stage-caption p + p {
+    margin-block-start: 0.3rem;
+  }
+}
