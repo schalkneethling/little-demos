@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Combining Popover and CSS Anchor Positioning</title>
+    <link rel="stylesheet" text="text/css" href="css/main.css" media="screen" />
+  </head>
+
+  <body>
+    <div class="example">
+      <p class="anchor-support">
+        Your browser does
+        <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/anchor"
+          >not support the `anchor()` function</a
+        >. As a result, the example below will not quite work. Thankfully, the folks over at OddBird
+        <a href="https://github.com/oddbird/css-anchor-positioning">built a great polyfill</a> for
+        most things CSS Anchor Positioning.
+        <button id="enable-polyfill" type="button">Click to enable the polyfill</button>
+      </p>
+
+      <button class="trigger" popovertarget="options" type="button">Click for options</button>
+
+      <ul id="options" class="options options-area" popover>
+        <li><a href="/all">View all</a></li>
+        <li><a href="/front">Front View</a></li>
+        <li><a href="/side">Side View</a></li>
+      </ul>
+    </div>
+
+    <footer>
+      <button id="toggle-position" type="button">Toggle trigger position</button>
+    </footer>
+
+    <script type="module">
+      const enablePolyfill = document.getElementById("enable-polyfill");
+      const example = document.querySelector(".example");
+      const togglePosition = document.getElementById("toggle-position");
+
+      togglePosition.addEventListener("click", () => {
+        example.classList.toggle("end");
+      });
+
+      enablePolyfill.addEventListener("click", async () => {
+        const { default: polyfill } =
+          await import("https://unpkg.com/@oddbird/css-anchor-positioning/dist/css-anchor-positioning-fn.js");
+        polyfill().then(() => {
+          enablePolyfill.textContent = "Polyfill enabled";
+        });
+      });
+    </script>
+  </body>
+</html>
