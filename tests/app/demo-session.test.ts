@@ -108,4 +108,73 @@ describe("demo session lifecycle", () => {
     finishMount();
     expect(await loading).toBe(false);
   });
+
+  test("uses the latest motion value when an asynchronous import mounts", async () => {
+    let resolve!: (value: DemoModule) => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((done) => {
+      markStarted = done;
+    });
+    let contextReducedMotion: boolean | undefined;
+    const session = createDemoSession({} as HTMLElement, () => {});
+    const loading = session.open(
+      () =>
+        new Promise((done) => {
+          resolve = done;
+          markStarted();
+        }),
+    );
+    await started;
+    session.setReducedMotion(true);
+    resolve({
+      mount: (_container, context) => {
+        contextReducedMotion = context.reducedMotion;
+      },
+    });
+    expect(await loading).toBe(true);
+    expect(contextReducedMotion).toBe(true);
+  });
+
+  test("notifies a mounted demo without remounting and removes subscribers on close", async () => {
+    const changes: boolean[] = [];
+    const mount = vi.fn((_container: HTMLElement, context: Parameters<DemoModule["mount"]>[1]) => {
+      context.onReducedMotionChange((reducedMotion) => changes.push(reducedMotion));
+    });
+    const session = createDemoSession({} as HTMLElement, () => {});
+    await session.open(async () => ({ mount }));
+
+    session.setReducedMotion(true);
+    session.setReducedMotion(false);
+    expect(changes).toEqual([false, true, false]);
+    expect(mount).toHaveBeenCalledTimes(1);
+
+    await session.close();
+    session.setReducedMotion(true);
+    expect(changes).toEqual([false, true, false]);
+  });
+
+  test("delivers a motion change that happens before an async mount subscribes", async () => {
+    let continueMount!: () => void;
+    let markStarted!: () => void;
+    const started = new Promise<void>((done) => {
+      markStarted = done;
+    });
+    const changes: boolean[] = [];
+    const session = createDemoSession({} as HTMLElement, () => {});
+    const loading = session.open(async () => ({
+      async mount(_container, context) {
+        markStarted();
+        await new Promise<void>((done) => {
+          continueMount = done;
+        });
+        context.onReducedMotionChange((reducedMotion) => changes.push(reducedMotion));
+      },
+    }));
+    await started;
+    session.setReducedMotion(true);
+    continueMount();
+
+    expect(await loading).toBe(true);
+    expect(changes).toEqual([true]);
+  });
 });

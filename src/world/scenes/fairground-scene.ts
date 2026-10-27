@@ -15,7 +15,6 @@ import { createSilhouetteGlow, GLOW_PADDING } from "../rendering/silhouette-glow
 import {
   DECORATION_PALETTE,
   createFairgroundDecorationPlan,
-  shouldAnimateDecorations,
 } from "../rendering/fairground-decoration";
 import type { WorldBridge } from "../bridge/world-events";
 import type { KeyboardInput } from "../input/keyboard-input";
@@ -30,6 +29,7 @@ import {
   PLAYER_WIDTH,
 } from "../player/player-geometry";
 import { getMovementVelocity } from "../player/player-movement";
+import { createExitTransition } from "../player/exit-transition";
 import {
   createAttractionRenderPlan,
   getAttractionVisualState,
@@ -78,6 +78,7 @@ export function createFairgroundScene({
     #visualTest = false;
     #controlsActive = false;
     #exiting = false;
+    #activeExit: ReturnType<typeof createExitTransition> | null = null;
     #manualCamera = false;
     #selectedAttractionId: string | null = null;
     #settings = initialSettings;
@@ -85,7 +86,6 @@ export function createFairgroundScene({
     #lastPosition = { ...FAIRGROUND_MAP.spawn };
     #lastPositionReportAt = 0;
     readonly #attractionVisuals = new Map<string, AttractionVisual>();
-    readonly #ambientLights: { light: Phaser.GameObjects.Arc; phase: number }[] = [];
     readonly #diagnosticsThrottle = createDiagnosticsThrottle(DIAGNOSTICS_REPORT_INTERVAL);
 
     constructor() {
@@ -139,25 +139,6 @@ export function createFairgroundScene({
       }
 
       const decorationPlan = createFairgroundDecorationPlan(ATTRACTIONS);
-      const sign = decorationPlan.entranceSign;
-      const signPanel = this.add
-        .rectangle(0, -14, sign.width, sign.height, DECORATION_PALETTE.cream)
-        .setStrokeStyle(4, DECORATION_PALETTE.teal);
-      const signPosts = [
-        this.add.rectangle(-82, 18, 10, 36, DECORATION_PALETTE.teal),
-        this.add.rectangle(82, 18, 10, 36, DECORATION_PALETTE.teal),
-      ];
-      const signText = this.add
-        .text(0, -14, sign.label, {
-          color: "#31777a",
-          fontFamily: "sans-serif",
-          fontSize: "25px",
-          fontStyle: "bold",
-        })
-        .setOrigin(0.5);
-      this.add
-        .container(sign.x, sign.y, [signPanel, ...signPosts, signText])
-        .setDepth(sign.y + 0.01);
 
       const obstacles: Phaser.GameObjects.Rectangle[] = [];
       const attractionRenderPlan = createAttractionRenderPlan(ATTRACTIONS, ASSET_BY_KEY);
@@ -319,15 +300,6 @@ export function createFairgroundScene({
         }
       }
 
-      for (const lightPlan of decorationPlan.ambientLights) {
-        const light = this.add
-          .circle(lightPlan.x, lightPlan.y, 6, DECORATION_PALETTE.cream, 0.86)
-          .setStrokeStyle(2, DECORATION_PALETTE.coral)
-          .setDepth(lightPlan.y + 0.004);
-        this.#ambientLights.push({ light, phase: lightPlan.phase });
-      }
-      this.#updateAmbientLights(0);
-
       this.#player = this.#artReady("player/walk")
         ? this.add
             .sprite(FAIRGROUND_MAP.spawn.x, FAIRGROUND_MAP.spawn.y, "player/walk", 0)
@@ -417,7 +389,8 @@ export function createFairgroundScene({
             this.#settings = command.settings;
             input.setScheme(command.settings.movementScheme);
             this.#applyCameraMotion();
-            this.#updateAmbientLights(0);
+            if (command.settings.reducedMotion) this.#activeExit?.finish();
+            this.#updatePlayerArt({ x: 0, y: 0 }, 0);
             this.#refreshAttractionVisuals();
             break;
           case "set-visited": {
@@ -450,7 +423,9 @@ export function createFairgroundScene({
       this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
         this.#unsubscribeCommands?.();
         this.#unsubscribeCommands = null;
-        this.#ambientLights.length = 0;
+        this.#activeExit?.cancel();
+        this.#activeExit = null;
+        this.#exiting = false;
         this.scale.off(Phaser.Scale.Events.RESIZE, this.#handleResize);
         const host = this.game.canvas.parentElement;
         if (debug && host) {
@@ -485,7 +460,6 @@ export function createFairgroundScene({
     }
 
     update(time: number) {
-      this.#updateAmbientLights(time);
       const velocity = getMovementVelocity(input.getIntent(), PLAYER_SPEED, this.#controlsActive);
       const body = this.#player.body as Phaser.Physics.Arcade.Body;
       if (this.#manualCamera && (velocity.x !== 0 || velocity.y !== 0)) this.#returnCamera();
@@ -587,17 +561,6 @@ export function createFairgroundScene({
       }
     }
 
-    #updateAmbientLights(time: number) {
-      const animate = shouldAnimateDecorations({
-        reducedMotion: this.#settings.reducedMotion,
-        visualFixture: this.#visualTest,
-      });
-      for (const { light, phase } of this.#ambientLights) {
-        const alpha = animate ? 0.74 + Math.sin(time / 700 + phase * Math.PI * 2) * 0.16 : 0.86;
-        light.setAlpha(alpha);
-      }
-    }
-
     #playAttractionExit(attractionId: string) {
       const attraction = getAttractionById(attractionId);
       const exitPlan = getAttractionExitPlan(attraction);
@@ -619,27 +582,33 @@ export function createFairgroundScene({
       this.#player.setPosition(exit.from.x, exit.from.y);
       this.#syncPlayerBody();
 
-      const complete = () => {
-        this.#player.setPosition(exit.to.x, exit.to.y);
-        this.#syncPlayerBody();
-        this.#exiting = false;
-        this.#playerFacing = "south";
-        this.#updatePlayerArt({ x: 0, y: 0 }, 0);
-        bridge.emit({ type: "attraction-exit-complete", attractionId });
-      };
+      let tween: Phaser.Tweens.Tween | undefined;
+      const transition = createExitTransition(
+        () => tween?.stop(),
+        () => {
+          this.#activeExit = null;
+          this.#player.setPosition(exit.to.x, exit.to.y);
+          this.#syncPlayerBody();
+          this.#exiting = false;
+          this.#playerFacing = "south";
+          this.#updatePlayerArt({ x: 0, y: 0 }, 0);
+          bridge.emit({ type: "attraction-exit-complete", attractionId });
+        },
+      );
+      this.#activeExit = transition;
 
       if (this.#settings.reducedMotion) {
-        complete();
+        transition.finish();
         return;
       }
 
-      this.tweens.add({
+      tween = this.tweens.add({
         targets: this.#player,
         x: exit.to.x,
         y: exit.to.y,
         duration: exit.durationMs,
         ease: "Sine.easeOut",
-        onComplete: complete,
+        onComplete: () => transition.finish(),
       });
     }
 

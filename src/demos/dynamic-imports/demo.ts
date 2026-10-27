@@ -36,7 +36,9 @@ export function createDemo(): DemoModule {
           throw new DemoImportError(error);
         });
         if (context.signal.aborted) return;
-        setupNavigation(slider, context.signal, context.reducedMotion);
+        setupNavigation(slider, context.signal, context.reducedMotion, (listener) =>
+          context.onReducedMotionChange(listener),
+        );
       }
     },
     unmount() {

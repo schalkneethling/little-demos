@@ -83,10 +83,16 @@ export function createDemo(): DemoModule {
       const cue = root.querySelector<HTMLInputElement>("#cue-switch")!;
       const scene = root.querySelector<HTMLElement>(".spotlight-scene")!;
       const motionNote = root.querySelector<HTMLElement>("[data-motion-note]")!;
-      motionNote.textContent =
-        context.reducedMotion || matchMedia("(prefers-reduced-motion: reduce)").matches
+      const renderMotion = (reducedMotion: boolean) => {
+        host!.dataset.reducedMotion = String(reducedMotion);
+        if (reducedMotion) {
+          for (const animation of scene.getAnimations()) animation.cancel();
+        }
+        motionNote.textContent = reducedMotion
           ? "Reduced motion is enabled: both cues change immediately, including registered properties."
           : "Registered properties transition for one second.";
+      };
+      context.onReducedMotionChange(renderMotion);
       const announce = () =>
         context.announce(
           `Custom properties are ${demo.dataset.registered === "true" ? "registered" : "unregistered"}. Current cue is ${demo.dataset.cue}.`,

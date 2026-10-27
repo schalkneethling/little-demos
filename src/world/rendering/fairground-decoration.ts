@@ -36,15 +36,7 @@ const PLANTER_LAYOUT: readonly PlanterDecoration[] = [
   { attractionId: "central-plaza", x: 1_111, y: 777 },
 ] as const;
 
-const AMBIENT_LIGHTS = [
-  { x: 825, y: 500, phase: 0 },
-  { x: 1_095, y: 500, phase: 0.25 },
-  { x: 825, y: 780, phase: 0.5 },
-  { x: 1_095, y: 780, phase: 0.75 },
-] as const;
-
 export interface FairgroundDecorationPlan {
-  entranceSign: WorldPoint & { width: number; height: number; label: string };
   planters: readonly PlanterDecoration[];
   visitedMarkers: readonly (WorldPoint & {
     attractionId: string;
@@ -56,7 +48,6 @@ export interface FairgroundDecorationPlan {
     width: number;
     label: "COMING SOON";
   })[];
-  ambientLights: readonly (WorldPoint & { phase: number })[];
 }
 
 export function createFairgroundDecorationPlan(
@@ -64,7 +55,6 @@ export function createFairgroundDecorationPlan(
 ): FairgroundDecorationPlan {
   const ids = new Set(attractions.map(({ id }) => id));
   return {
-    entranceSign: { x: 960, y: 1_240, width: 204, height: 52, label: "Little Demos" },
     planters: PLANTER_LAYOUT.filter(({ attractionId }) => ids.has(attractionId)),
     visitedMarkers: attractions.filter(isAttractionInteractive).map((attraction) => ({
       attractionId: attraction.id,
@@ -82,13 +72,5 @@ export function createFairgroundDecorationPlan(
         width: 112,
         label: "COMING SOON" as const,
       })),
-    ambientLights: AMBIENT_LIGHTS,
   };
-}
-
-export function shouldAnimateDecorations(settings: {
-  reducedMotion: boolean;
-  visualFixture: boolean;
-}): boolean {
-  return !settings.reducedMotion && !settings.visualFixture;
 }

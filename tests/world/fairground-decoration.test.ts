@@ -1,29 +1,17 @@
 import { describe, expect, test } from "vite-plus/test";
 import { isAttractionInteractive } from "../../src/world/attractions/attraction-controller";
 import { ATTRACTIONS } from "../../src/world/attractions/attraction-registry";
-import { FAIRGROUND_MAP } from "../../src/world/map/fairground-map";
 import {
-  DECORATION_PALETTE,
   PLANTER_ART_BOUNDS,
   createFairgroundDecorationPlan,
-  shouldAnimateDecorations,
 } from "../../src/world/rendering/fairground-decoration";
 
 const plan = createFairgroundDecorationPlan(ATTRACTIONS);
 
 describe("fairground decoration planning", () => {
-  test("keeps the entrance sign compact, below spawn, and presentation-only", () => {
-    expect(plan.entranceSign).toMatchObject({
-      label: "Little Demos",
-      x: FAIRGROUND_MAP.spawn.x,
-      y: 1_240,
-    });
-    expect(plan.entranceSign.width).toBeLessThanOrEqual(220);
-    expect(plan.entranceSign.y).toBeGreaterThan(FAIRGROUND_MAP.spawn.y);
-    expect(plan.entranceSign.y + plan.entranceSign.height / 2).toBeLessThanOrEqual(
-      FAIRGROUND_MAP.height,
-    );
-    expect(plan.entranceSign).not.toHaveProperty("collisionShape");
+  test("omits duplicate branding and misleading hotspot-like decorations", () => {
+    expect(plan).not.toHaveProperty("entranceSign");
+    expect(plan).not.toHaveProperty("ambientLights");
   });
 
   test("places two substantial planters inside every attraction footprint and off approach centers", () => {
@@ -66,15 +54,5 @@ describe("fairground decoration planning", () => {
       expect.objectContaining({ attractionId: "funhouse", label: "COMING SOON" }),
     ]);
     expect(plan.comingSoonMarkers[0]!.width).toBeLessThanOrEqual(120);
-  });
-
-  test("keeps ambient motion deterministic for reduced motion and visual fixtures", () => {
-    expect(plan.ambientLights.length).toBeGreaterThanOrEqual(2);
-    expect(plan.ambientLights.length).toBeLessThanOrEqual(4);
-    expect(shouldAnimateDecorations({ reducedMotion: false, visualFixture: false })).toBe(true);
-    expect(shouldAnimateDecorations({ reducedMotion: true, visualFixture: false })).toBe(false);
-    expect(shouldAnimateDecorations({ reducedMotion: false, visualFixture: true })).toBe(false);
-    expect(shouldAnimateDecorations({ reducedMotion: true, visualFixture: true })).toBe(false);
-    expect(DECORATION_PALETTE).toEqual({ teal: 0x31777a, coral: 0xbb4d42, cream: 0xf8f4e9 });
   });
 });
