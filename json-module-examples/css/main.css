@@ -1,0 +1,12 @@
+.emoji-list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 1rem;
+
+  li {
+    font-size: clamp(4rem, 8vw, 10vw);
+  }
+}
