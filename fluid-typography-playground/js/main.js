@@ -82,12 +82,6 @@
     return (Math.round(n * 1000) / 1000).toFixed(3).replace(/\.?0+$/, "") + "rem";
   }
 
-  function fmtPx(n, decimals = 1) {
-    return (
-      (Math.round(n * Math.pow(10, decimals)) / Math.pow(10, decimals)).toFixed(decimals) + "px"
-    );
-  }
-
   function fmtCqi(n) {
     const v = Math.round(n * 100) / 100;
     return v.toFixed(2).replace(/\.?0+$/, "") + "cqi";
@@ -190,12 +184,9 @@
       const extX1 = xMax;
       const extY0 = lineAtX(extX0);
       const extY1 = lineAtX(extX1);
-      // Only draw the parts that are outside the clamp segment and within y-range
-      const clampYToPlot = (y) => Math.max(yMin, Math.min(yMax, y));
 
       // Left extension (below W1, where the line goes below MIN)
       if (extY0 < r.minPx) {
-        const visY0 = clampYToPlot(extY0);
         // find x where extended line crosses yMin (bottom of plot)
         let extStartX = extX0;
         if (extY0 < yMin) {
@@ -264,7 +255,6 @@
     const max = parseInt(slider.max, 10);
     const toPct = (v) => ((v - min) / (max - min)) * 100;
 
-    const current = parseInt(slider.value, 10);
     let html = "";
     // W1
     if (r.w1 >= min && r.w1 <= max) {
@@ -301,14 +291,19 @@
     if (!r.valid) return;
     const css = `font-size: clamp(${fmtRem(r.minRem)}, ${fmtRem(r.interceptRem)} + ${fmtCqi(r.slopeCqi)}, ${fmtRem(r.maxRem)});`;
 
-    navigator.clipboard.writeText(css).then(() => {
-      els.copyBtn.textContent = "Copied";
-      els.copyBtn.classList.add("copied");
-      setTimeout(() => {
-        els.copyBtn.textContent = "Copy";
-        els.copyBtn.classList.remove("copied");
-      }, 1400);
-    });
+    navigator.clipboard
+      .writeText(css)
+      .then(() => {
+        els.copyBtn.textContent = "Copied";
+        els.copyBtn.classList.add("copied");
+        setTimeout(() => {
+          els.copyBtn.textContent = "Copy";
+          els.copyBtn.classList.remove("copied");
+        }, 1400);
+      })
+      .catch(() => {
+        // A failed copy leaves the button label as it was.
+      });
   });
 
   els.resetBtn.addEventListener("click", () => {

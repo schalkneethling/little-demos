@@ -368,13 +368,7 @@ The exact component model may change if the host site already uses React, Preact
 ### 8.1 Application state
 
 ```ts
-type AppMode =
-  | "document"
-  | "exploring"
-  | "demo-open"
-  | "directory-open"
-  | "paused"
-  | "error";
+type AppMode = "document" | "exploring" | "demo-open" | "directory-open" | "paused" | "error";
 
 interface AppState {
   mode: AppMode;

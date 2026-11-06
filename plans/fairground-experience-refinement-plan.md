@@ -12,13 +12,13 @@ Current starting point: Phase 5 PR #13 remains open and draft. Build above its c
 
 ### Responsibilities
 
-| Work | Primary assignment | Independent review |
-|---|---|---|
-| Spatial contracts, motion architecture | GPT 6 Sol/high | Root integration review |
-| Substantial implementation | GPT 5.6 Sol/high | GPT 6 Sol/high |
-| Bounded regression tests, UI cleanup | GPT 6 Luna/medium | Implementer plus root |
-| Documentation and evidence reconciliation | GPT 5.6 Terra/medium | Root |
-| Mechanical fixture updates | GPT 5.6 Luna/medium | Test owner |
+| Work                                      | Primary assignment   | Independent review      |
+| ----------------------------------------- | -------------------- | ----------------------- |
+| Spatial contracts, motion architecture    | GPT 6 Sol/high       | Root integration review |
+| Substantial implementation                | GPT 5.6 Sol/high     | GPT 6 Sol/high          |
+| Bounded regression tests, UI cleanup      | GPT 6 Luna/medium    | Implementer plus root   |
+| Documentation and evidence reconciliation | GPT 5.6 Terra/medium | Root                    |
+| Mechanical fixture updates                | GPT 5.6 Luna/medium  | Test owner              |
 
 Use only agents with useful, bounded work. Maximum three concurrent subagents. Root owns Git operations, shared-file integration, visual direction and acceptance. An implementation agent does not provide its own final independent review.
 
