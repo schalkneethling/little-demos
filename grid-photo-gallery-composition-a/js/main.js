@@ -29,4 +29,4 @@ async function render() {
   });
 }
 
-void render();
+render().catch((error) => console.error(error));
