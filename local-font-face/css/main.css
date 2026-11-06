@@ -1,0 +1,9 @@
+@font-face {
+  font-family: Inter;
+  src: local("Inter");
+}
+
+h1,
+p {
+  font-family: Inter, system-ui, sans-serif;
+}
