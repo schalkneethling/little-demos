@@ -30,3 +30,7 @@ async function render() {
 }
 
 render().catch((error) => console.error(error));
+
+// Keep render() in this module scope. Without an import or export, the
+// linter treats this file as a classic script and shares its globals.
+export {};
