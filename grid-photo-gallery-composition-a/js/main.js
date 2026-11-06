@@ -29,4 +29,4 @@ async function render() {
   });
 }
 
-render();
+void render();
